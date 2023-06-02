@@ -1,0 +1,1834 @@
+  [1m[35m (41.6ms)[0m  [1m[35mDROP DATABASE IF EXISTS "my_app_test"[0m
+  [1m[35m (638.0ms)[0m  [1m[35mCREATE DATABASE "my_app_test" ENCODING = 'LATIN1'[0m
+  [1m[35mSQL (1.7ms)[0m  [1m[35mCREATE EXTENSION IF NOT EXISTS "plpgsql"[0m
+  [1m[35m (0.4ms)[0m  [1m[35mDROP TABLE IF EXISTS "users" CASCADE[0m
+  [1m[35m (18.1ms)[0m  [1m[35mCREATE TABLE "users" ("id" bigserial primary key, "name" character varying, "email" character varying, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[35m (10.9ms)[0m  [1m[35mCREATE TABLE "schema_migrations" ("version" character varying NOT NULL PRIMARY KEY)[0m
+  [1m[36mActiveRecord::SchemaMigration Pluck (0.5ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[35m (1.8ms)[0m  [1m[32mINSERT INTO "schema_migrations" (version) VALUES (20230515152125)[0m
+  [1m[35m (8.9ms)[0m  [1m[35mCREATE TABLE "ar_internal_metadata" ("key" character varying NOT NULL PRIMARY KEY, "value" character varying, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.5ms)[0m  [1m[34mSELECT "ar_internal_metadata".* FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 LIMIT $2[0m  [["key", "environment"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.5ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mActiveRecord::InternalMetadata Create (1.1ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "key"[0m  [["key", "environment"], ["value", "test"], ["created_at", "2023-05-15 16:13:59.093988"], ["updated_at", "2023-05-15 16:13:59.093988"]]
+  [1m[36mTRANSACTION (1.6ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.5ms)[0m  [1m[34mSELECT "ar_internal_metadata".* FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 LIMIT $2[0m  [["key", "environment"], ["LIMIT", 1]]
+  [1m[36mActiveRecord::InternalMetadata Load (0.4ms)[0m  [1m[34mSELECT "ar_internal_metadata".* FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 LIMIT $2[0m  [["key", "schema_sha1"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.5ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mActiveRecord::InternalMetadata Create (3.2ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "key"[0m  [["key", "schema_sha1"], ["value", "9a3ca94078f14b1f88ace5d1c4a16d35c47bd4fe"], ["created_at", "2023-05-15 16:13:59.101928"], ["updated_at", "2023-05-15 16:13:59.101928"]]
+  [1m[36mTRANSACTION (2.0ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mActiveRecord::SchemaMigration Pluck (10.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mTRANSACTION (1.8ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (4.6ms)[0m  [1m[35mALTER TABLE "users" DISABLE TRIGGER ALL;ALTER TABLE "schema_migrations" DISABLE TRIGGER ALL;ALTER TABLE "ar_internal_metadata" DISABLE TRIGGER ALL[0m
+  [1m[36mTRANSACTION (7.5ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mTRANSACTION (4.3ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (4.1ms)[0m  [1m[31mDELETE FROM "users";
+INSERT INTO "users" ("id", "name", "email", "created_at", "updated_at") VALUES (980190962, 'MyString', 'MyString', '2023-05-15 16:13:59.275943', '2023-05-15 16:13:59.275943'), (298486374, 'MyString', 'MyString', '2023-05-15 16:13:59.275943', '2023-05-15 16:13:59.275943')[0m
+  [1m[36mTRANSACTION (23.1ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mTRANSACTION (8.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (9.4ms)[0m  [1m[35mALTER TABLE "users" ENABLE TRIGGER ALL;ALTER TABLE "schema_migrations" ENABLE TRIGGER ALL;ALTER TABLE "ar_internal_metadata" ENABLE TRIGGER ALL[0m
+  [1m[36mTRANSACTION (5.4ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mTRANSACTION (0.5ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (5.2ms)[0m  [1m[35mdo $$
+  declare r record;
+BEGIN
+FOR r IN (
+  SELECT FORMAT(
+    'UPDATE pg_constraint SET convalidated=false WHERE conname = ''%I'' AND connamespace::regnamespace = ''%I''::regnamespace; ALTER TABLE %I.%I VALIDATE CONSTRAINT %I;',
+    constraint_name,
+    table_schema,
+    table_schema,
+    table_name,
+    constraint_name
+  ) AS constraint_check
+  FROM information_schema.table_constraints WHERE constraint_type = 'FOREIGN KEY'
+)
+  LOOP
+    EXECUTE (r.constraint_check);
+  END LOOP;
+END;
+$$;
+[0m
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[35mBEGIN[0m
+------------------------------------------
+UsersControllerTest: test_should_get_index
+------------------------------------------
+  [1m[36mUser Load (0.5ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+Started GET "/users" for 127.0.0.1 at 2023-05-15 19:13:59 +0300
+Processing by UsersController#index as HTML
+  Rendering layout layouts/application.html.haml
+  Rendering users/index.html.haml within layouts/application
+  [1m[36mUser Load (0.6ms)[0m  [1m[34mSELECT "users".* FROM "users"[0m
+  Rendered users/index.html.haml within layouts/application (Duration: 18.6ms | Allocations: 12474)
+  Rendered shared/_header.html.haml (Duration: 5.3ms | Allocations: 3382)
+  Rendered shared/_footer.html.haml (Duration: 4.4ms | Allocations: 1801)
+  Rendered layout layouts/application.html.haml (Duration: 729.8ms | Allocations: 135286)
+Completed 200 OK in 754ms (Views: 737.8ms | ActiveRecord: 0.6ms | Allocations: 138540)
+  [1m[36mTRANSACTION (0.5ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mBEGIN[0m
+----------------------------------------
+UsersControllerTest: test_should_get_new
+----------------------------------------
+  [1m[36mUser Load (0.4ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+Started GET "/users/new" for 127.0.0.1 at 2023-05-15 19:14:00 +0300
+Processing by UsersController#new as HTML
+  Rendering layout layouts/application.html.haml
+  Rendering users/new.html.haml within layouts/application
+  Rendered users/_form.html.haml (Duration: 138.5ms | Allocations: 7809)
+  Rendered users/new.html.haml within layouts/application (Duration: 160.4ms | Allocations: 9905)
+  Rendered shared/_header.html.haml (Duration: 0.1ms | Allocations: 117)
+  Rendered shared/_footer.html.haml (Duration: 0.0ms | Allocations: 33)
+  Rendered layout layouts/application.html.haml (Duration: 162.5ms | Allocations: 12302)
+Completed 200 OK in 165ms (Views: 164.5ms | ActiveRecord: 0.0ms | Allocations: 12624)
+  [1m[36mTRANSACTION (0.6ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[35mBEGIN[0m
+---------------------------------------------
+UsersControllerTest: test_should_destroy_user
+---------------------------------------------
+  [1m[36mUser Load (0.5ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+  [1m[36mUser Count (0.8ms)[0m  [1m[34mSELECT COUNT(*) FROM "users"[0m
+Started DELETE "/users/980190962" for 127.0.0.1 at 2023-05-15 19:14:00 +0300
+Processing by UsersController#destroy as HTML
+  Parameters: {"id"=>"980190962"}
+  [1m[36mUser Load (0.6ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.5ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Destroy (0.5ms)[0m  [1m[31mDELETE FROM "users" WHERE "users"."id" = $1[0m  [["id", 980190962]]
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Redirected to http://www.example.com/users
+Completed 302 Found in 7ms (ActiveRecord: 1.9ms | Allocations: 1106)
+  [1m[36mUser Count (0.5ms)[0m  [1m[34mSELECT COUNT(*) FROM "users"[0m
+  [1m[36mTRANSACTION (0.5ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[35mBEGIN[0m
+--------------------------------------------
+UsersControllerTest: test_should_update_user
+--------------------------------------------
+  [1m[36mUser Load (0.4ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+Started PATCH "/users/980190962" for 127.0.0.1 at 2023-05-15 19:14:00 +0300
+Processing by UsersController#update as HTML
+  Parameters: {"user"=>{"email"=>"MyString", "name"=>"MyString"}, "id"=>"980190962"}
+  [1m[36mUser Load (0.6ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+Redirected to http://www.example.com/users/980190962
+Completed 302 Found in 2ms (ActiveRecord: 0.6ms | Allocations: 816)
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mBEGIN[0m
+--------------------------------------------
+UsersControllerTest: test_should_create_user
+--------------------------------------------
+  [1m[36mUser Load (0.4ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+  [1m[36mUser Count (1.5ms)[0m  [1m[34mSELECT COUNT(*) FROM "users"[0m
+Started POST "/users" for 127.0.0.1 at 2023-05-15 19:14:00 +0300
+Processing by UsersController#create as HTML
+  Parameters: {"user"=>{"email"=>"MyString", "name"=>"MyString"}}
+  [1m[36mTRANSACTION (1.5ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Create (0.5ms)[0m  [1m[32mINSERT INTO "users" ("name", "email", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "MyString"], ["email", "MyString"], ["created_at", "2023-05-15 16:14:00.902260"], ["updated_at", "2023-05-15 16:14:00.902260"]]
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Redirected to http://www.example.com/users/980190963
+Completed 302 Found in 5ms (ActiveRecord: 2.4ms | Allocations: 815)
+  [1m[36mUser Count (0.4ms)[0m  [1m[34mSELECT COUNT(*) FROM "users"[0m
+  [1m[36mUser Load (0.4ms)[0m  [1m[34mSELECT "users".* FROM "users" ORDER BY "users"."id" DESC LIMIT $1[0m  [["LIMIT", 1]]
+  [1m[36mTRANSACTION (1.7ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mBEGIN[0m
+-----------------------------------------
+UsersControllerTest: test_should_get_edit
+-----------------------------------------
+  [1m[36mUser Load (0.4ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+Started GET "/users/980190962/edit" for 127.0.0.1 at 2023-05-15 19:14:00 +0300
+Processing by UsersController#edit as HTML
+  Parameters: {"id"=>"980190962"}
+  [1m[36mUser Load (0.3ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+  Rendering layout layouts/application.html.haml
+  Rendering users/edit.html.haml within layouts/application
+  Rendered users/_form.html.haml (Duration: 0.8ms | Allocations: 688)
+  Rendered users/edit.html.haml within layouts/application (Duration: 5.4ms | Allocations: 3122)
+  Rendered shared/_header.html.haml (Duration: 0.1ms | Allocations: 117)
+  Rendered shared/_footer.html.haml (Duration: 0.0ms | Allocations: 33)
+  Rendered layout layouts/application.html.haml (Duration: 8.4ms | Allocations: 5488)
+Completed 200 OK in 10ms (Views: 8.7ms | ActiveRecord: 0.3ms | Allocations: 5883)
+  [1m[36mTRANSACTION (12.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.5ms)[0m  [1m[35mBEGIN[0m
+------------------------------------------
+UsersControllerTest: test_should_show_user
+------------------------------------------
+  [1m[36mUser Load (0.4ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+Started GET "/users/980190962" for 127.0.0.1 at 2023-05-15 19:14:00 +0300
+Processing by UsersController#show as HTML
+  Parameters: {"id"=>"980190962"}
+  [1m[36mUser Load (0.5ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+  Rendering layout layouts/application.html.haml
+  Rendering users/show.html.haml within layouts/application
+  Rendered users/show.html.haml within layouts/application (Duration: 7.7ms | Allocations: 3665)
+  Rendered shared/_header.html.haml (Duration: 1.8ms | Allocations: 118)
+  Rendered shared/_footer.html.haml (Duration: 0.0ms | Allocations: 33)
+  Rendered layout layouts/application.html.haml (Duration: 10.9ms | Allocations: 6024)
+Completed 200 OK in 12ms (Views: 11.2ms | ActiveRecord: 0.5ms | Allocations: 6441)
+  [1m[36mTRANSACTION (0.9ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.7ms)[0m  [1m[35mBEGIN[0m
+-----------------------------------------
+MainControllerTest: test_should_get_index
+-----------------------------------------
+Started GET "/main/index" for 127.0.0.1 at 2023-05-15 19:14:00 +0300
+Processing by MainController#index as HTML
+  Rendering layout layouts/application.html.haml
+  Rendering main/index.html.haml within layouts/application
+  Rendered main/index.html.haml within layouts/application (Duration: 20.6ms | Allocations: 1495)
+  Rendered shared/_header.html.haml (Duration: 0.2ms | Allocations: 151)
+  Rendered shared/_footer.html.haml (Duration: 0.0ms | Allocations: 34)
+  Rendered layout layouts/application.html.haml (Duration: 24.7ms | Allocations: 3977)
+Completed 200 OK in 30ms (Views: 29.3ms | ActiveRecord: 0.0ms | Allocations: 4617)
+  [1m[36mTRANSACTION (5.0ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[35mBEGIN[0m
+-----------------------------------------
+MainControllerTest: test_should_get_about
+-----------------------------------------
+Started GET "/main/about" for 127.0.0.1 at 2023-05-15 19:14:01 +0300
+Processing by MainController#about as HTML
+  Rendering layout layouts/application.html.haml
+  Rendering main/about.html.haml within layouts/application
+  Rendered main/about.html.haml within layouts/application (Duration: 3.3ms | Allocations: 1492)
+  Rendered shared/_header.html.haml (Duration: 0.1ms | Allocations: 122)
+  Rendered shared/_footer.html.haml (Duration: 0.0ms | Allocations: 33)
+  Rendered layout layouts/application.html.haml (Duration: 5.1ms | Allocations: 3864)
+Completed 200 OK in 6ms (Views: 5.4ms | ActiveRecord: 0.0ms | Allocations: 4138)
+  [1m[36mTRANSACTION (0.7ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[35mBEGIN[0m
+----------------------------------------
+MainControllerTest: test_should_get_help
+----------------------------------------
+Started GET "/main/help" for 127.0.0.1 at 2023-05-15 19:14:01 +0300
+Processing by MainController#help as HTML
+  Rendering layout layouts/application.html.haml
+  Rendering main/help.html.haml within layouts/application
+  Rendered main/help.html.haml within layouts/application (Duration: 5.3ms | Allocations: 1492)
+  Rendered shared/_header.html.haml (Duration: 0.1ms | Allocations: 122)
+  Rendered shared/_footer.html.haml (Duration: 0.0ms | Allocations: 33)
+  Rendered layout layouts/application.html.haml (Duration: 6.8ms | Allocations: 3864)
+Completed 200 OK in 7ms (Views: 7.1ms | ActiveRecord: 0.0ms | Allocations: 4138)
+  [1m[36mTRANSACTION (0.6ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[35mBEGIN[0m
+--------------------------------------------
+MainControllerTest: test_should_get_contacts
+--------------------------------------------
+Started GET "/main/contacts" for 127.0.0.1 at 2023-05-15 19:14:01 +0300
+Processing by MainController#contacts as HTML
+  Rendering layout layouts/application.html.haml
+  Rendering main/contacts.html.haml within layouts/application
+  Rendered main/contacts.html.haml within layouts/application (Duration: 3.5ms | Allocations: 1492)
+  Rendered shared/_header.html.haml (Duration: 0.1ms | Allocations: 122)
+  Rendered shared/_footer.html.haml (Duration: 0.0ms | Allocations: 33)
+  Rendered layout layouts/application.html.haml (Duration: 5.1ms | Allocations: 3864)
+Completed 200 OK in 6ms (Views: 5.4ms | ActiveRecord: 0.0ms | Allocations: 4138)
+  [1m[36mTRANSACTION (1.5ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (3.3ms)[0m  [1m[35mBEGIN[0m
+---------------------------------------------
+SharedControllerTest: test_should_get__footer
+---------------------------------------------
+Started GET "/shared/_footer" for 127.0.0.1 at 2023-05-15 19:14:01 +0300
+Processing by SharedController#_footer as HTML
+  Rendering layout layouts/application.html.haml
+  Rendering shared/_footer.html.haml within layouts/application
+  Rendered shared/_footer.html.haml within layouts/application (Duration: 0.2ms | Allocations: 64)
+  Rendered shared/_header.html.haml (Duration: 0.4ms | Allocations: 126)
+  Rendered shared/_footer.html.haml (Duration: 0.0ms | Allocations: 33)
+  Rendered layout layouts/application.html.haml (Duration: 2.9ms | Allocations: 2516)
+Completed 200 OK in 14ms (Views: 13.7ms | ActiveRecord: 0.0ms | Allocations: 3063)
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mBEGIN[0m
+---------------------------------------------
+SharedControllerTest: test_should_get__header
+---------------------------------------------
+Started GET "/shared/_header" for 127.0.0.1 at 2023-05-15 19:14:01 +0300
+Processing by SharedController#_header as HTML
+  Rendering layout layouts/application.html.haml
+  Rendering shared/_header.html.haml within layouts/application
+  Rendered shared/_header.html.haml within layouts/application (Duration: 0.1ms | Allocations: 121)
+  Rendered shared/_header.html.haml (Duration: 0.1ms | Allocations: 118)
+  Rendered shared/_footer.html.haml (Duration: 0.0ms | Allocations: 33)
+  Rendered layout layouts/application.html.haml (Duration: 3.0ms | Allocations: 2488)
+Completed 200 OK in 4ms (Views: 3.3ms | ActiveRecord: 0.0ms | Allocations: 2706)
+  [1m[36mTRANSACTION (0.8ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mActiveRecord::InternalMetadata Pluck (5.6ms)[0m  [1m[34mSELECT "ar_internal_metadata"."value" FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 LIMIT $2[0m  [["key", "schema_sha1"], ["LIMIT", 1]]
+  [1m[36mActiveRecord::SchemaMigration Pluck (0.8ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.5ms)[0m  [1m[35mALTER TABLE "users" DISABLE TRIGGER ALL;ALTER TABLE "schema_migrations" DISABLE TRIGGER ALL;ALTER TABLE "ar_internal_metadata" DISABLE TRIGGER ALL[0m
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.6ms)[0m  [1m[31mDELETE FROM "users";
+INSERT INTO "users" ("id", "name", "email", "created_at", "updated_at") VALUES (980190962, 'MyString', 'MyString', '2023-05-15 16:14:15.945104', '2023-05-15 16:14:15.945104'), (298486374, 'MyString', 'MyString', '2023-05-15 16:14:15.945104', '2023-05-15 16:14:15.945104')[0m
+  [1m[36mTRANSACTION (1.5ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.3ms)[0m  [1m[35mALTER TABLE "users" ENABLE TRIGGER ALL;ALTER TABLE "schema_migrations" ENABLE TRIGGER ALL;ALTER TABLE "ar_internal_metadata" ENABLE TRIGGER ALL[0m
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (1.7ms)[0m  [1m[35mdo $$
+  declare r record;
+BEGIN
+FOR r IN (
+  SELECT FORMAT(
+    'UPDATE pg_constraint SET convalidated=false WHERE conname = ''%I'' AND connamespace::regnamespace = ''%I''::regnamespace; ALTER TABLE %I.%I VALIDATE CONSTRAINT %I;',
+    constraint_name,
+    table_schema,
+    table_schema,
+    table_name,
+    constraint_name
+  ) AS constraint_check
+  FROM information_schema.table_constraints WHERE constraint_type = 'FOREIGN KEY'
+)
+  LOOP
+    EXECUTE (r.constraint_check);
+  END LOOP;
+END;
+$$;
+[0m
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mBEGIN[0m
+-----------------------------------------
+UsersControllerTest: test_should_get_edit
+-----------------------------------------
+  [1m[36mUser Load (0.6ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+Started GET "/users/980190962/edit" for 127.0.0.1 at 2023-05-15 19:14:16 +0300
+Processing by UsersController#edit as HTML
+  Parameters: {"id"=>"980190962"}
+  [1m[36mUser Load (0.7ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+  Rendering layout layouts/application.html.haml
+  Rendering users/edit.html.haml within layouts/application
+  Rendered users/_form.html.haml (Duration: 12.7ms | Allocations: 8126)
+  Rendered users/edit.html.haml within layouts/application (Duration: 26.0ms | Allocations: 16525)
+  Rendered shared/_header.html.haml (Duration: 5.6ms | Allocations: 3364)
+  Rendered shared/_footer.html.haml (Duration: 4.3ms | Allocations: 1801)
+  Rendered layout layouts/application.html.haml (Duration: 156.1ms | Allocations: 70645)
+Completed 200 OK in 167ms (Views: 158.6ms | ActiveRecord: 0.7ms | Allocations: 74188)
+  [1m[36mTRANSACTION (0.6ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mBEGIN[0m
+------------------------------------------
+UsersControllerTest: test_should_show_user
+------------------------------------------
+  [1m[36mUser Load (0.5ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+Started GET "/users/980190962" for 127.0.0.1 at 2023-05-15 19:14:16 +0300
+Processing by UsersController#show as HTML
+  Parameters: {"id"=>"980190962"}
+  [1m[36mUser Load (0.4ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+  Rendering layout layouts/application.html.haml
+  Rendering users/show.html.haml within layouts/application
+  Rendered users/show.html.haml within layouts/application (Duration: 7.8ms | Allocations: 3808)
+  Rendered shared/_header.html.haml (Duration: 0.1ms | Allocations: 118)
+  Rendered shared/_footer.html.haml (Duration: 0.0ms | Allocations: 33)
+  Rendered layout layouts/application.html.haml (Duration: 9.6ms | Allocations: 6167)
+Completed 200 OK in 11ms (Views: 9.9ms | ActiveRecord: 0.4ms | Allocations: 6586)
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.7ms)[0m  [1m[35mBEGIN[0m
+----------------------------------------
+UsersControllerTest: test_should_get_new
+----------------------------------------
+  [1m[36mUser Load (0.4ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+Started GET "/users/new" for 127.0.0.1 at 2023-05-15 19:14:16 +0300
+Processing by UsersController#new as HTML
+  Rendering layout layouts/application.html.haml
+  Rendering users/new.html.haml within layouts/application
+  Rendered users/_form.html.haml (Duration: 0.8ms | Allocations: 605)
+  Rendered users/new.html.haml within layouts/application (Duration: 12.1ms | Allocations: 2639)
+  Rendered shared/_header.html.haml (Duration: 0.1ms | Allocations: 117)
+  Rendered shared/_footer.html.haml (Duration: 0.0ms | Allocations: 33)
+  Rendered layout layouts/application.html.haml (Duration: 14.4ms | Allocations: 5035)
+Completed 200 OK in 15ms (Views: 14.6ms | ActiveRecord: 0.0ms | Allocations: 5352)
+  [1m[36mTRANSACTION (5.0ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.8ms)[0m  [1m[35mBEGIN[0m
+--------------------------------------------
+UsersControllerTest: test_should_create_user
+--------------------------------------------
+  [1m[36mUser Load (11.4ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+  [1m[36mUser Count (4.3ms)[0m  [1m[34mSELECT COUNT(*) FROM "users"[0m
+Started POST "/users" for 127.0.0.1 at 2023-05-15 19:14:16 +0300
+Processing by UsersController#create as HTML
+  Parameters: {"user"=>{"email"=>"MyString", "name"=>"MyString"}}
+  [1m[36mTRANSACTION (8.6ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Create (1.3ms)[0m  [1m[32mINSERT INTO "users" ("name", "email", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "MyString"], ["email", "MyString"], ["created_at", "2023-05-15 16:14:16.588718"], ["updated_at", "2023-05-15 16:14:16.588718"]]
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Redirected to http://www.example.com/users/980190963
+Completed 302 Found in 17ms (ActiveRecord: 10.3ms | Allocations: 1239)
+  [1m[36mUser Count (0.7ms)[0m  [1m[34mSELECT COUNT(*) FROM "users"[0m
+  [1m[36mUser Load (0.4ms)[0m  [1m[34mSELECT "users".* FROM "users" ORDER BY "users"."id" DESC LIMIT $1[0m  [["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mBEGIN[0m
+--------------------------------------------
+UsersControllerTest: test_should_update_user
+--------------------------------------------
+  [1m[36mUser Load (0.4ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+Started PATCH "/users/980190962" for 127.0.0.1 at 2023-05-15 19:14:16 +0300
+Processing by UsersController#update as HTML
+  Parameters: {"user"=>{"email"=>"MyString", "name"=>"MyString"}, "id"=>"980190962"}
+  [1m[36mUser Load (0.5ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+Redirected to http://www.example.com/users/980190962
+Completed 302 Found in 2ms (ActiveRecord: 0.5ms | Allocations: 564)
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mBEGIN[0m
+------------------------------------------
+UsersControllerTest: test_should_get_index
+------------------------------------------
+  [1m[36mUser Load (0.4ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+Started GET "/users" for 127.0.0.1 at 2023-05-15 19:14:16 +0300
+Processing by UsersController#index as HTML
+  Rendering layout layouts/application.html.haml
+  Rendering users/index.html.haml within layouts/application
+  [1m[36mUser Load (0.5ms)[0m  [1m[34mSELECT "users".* FROM "users"[0m
+  Rendered users/index.html.haml within layouts/application (Duration: 8.6ms | Allocations: 6359)
+  Rendered shared/_header.html.haml (Duration: 0.1ms | Allocations: 118)
+  Rendered shared/_footer.html.haml (Duration: 0.2ms | Allocations: 33)
+  Rendered layout layouts/application.html.haml (Duration: 10.3ms | Allocations: 8738)
+Completed 200 OK in 11ms (Views: 10.0ms | ActiveRecord: 0.5ms | Allocations: 9054)
+  [1m[36mTRANSACTION (0.5ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.9ms)[0m  [1m[35mBEGIN[0m
+---------------------------------------------
+UsersControllerTest: test_should_destroy_user
+---------------------------------------------
+  [1m[36mUser Load (0.5ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+  [1m[36mUser Count (0.5ms)[0m  [1m[34mSELECT COUNT(*) FROM "users"[0m
+Started DELETE "/users/980190962" for 127.0.0.1 at 2023-05-15 19:14:16 +0300
+Processing by UsersController#destroy as HTML
+  Parameters: {"id"=>"980190962"}
+  [1m[36mUser Load (1.6ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.6ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Destroy (1.0ms)[0m  [1m[31mDELETE FROM "users" WHERE "users"."id" = $1[0m  [["id", 980190962]]
+  [1m[36mTRANSACTION (2.8ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Redirected to http://www.example.com/users
+Completed 302 Found in 10ms (ActiveRecord: 6.0ms | Allocations: 614)
+  [1m[36mUser Count (4.4ms)[0m  [1m[34mSELECT COUNT(*) FROM "users"[0m
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[35mBEGIN[0m
+---------------------------------------------
+SharedControllerTest: test_should_get__footer
+---------------------------------------------
+Started GET "/shared/_footer" for 127.0.0.1 at 2023-05-15 19:14:16 +0300
+Processing by SharedController#_footer as HTML
+  Rendering layout layouts/application.html.haml
+  Rendering shared/_footer.html.haml within layouts/application
+  Rendered shared/_footer.html.haml within layouts/application (Duration: 0.1ms | Allocations: 64)
+  Rendered shared/_header.html.haml (Duration: 0.1ms | Allocations: 126)
+  Rendered shared/_footer.html.haml (Duration: 0.1ms | Allocations: 33)
+  Rendered layout layouts/application.html.haml (Duration: 11.8ms | Allocations: 2516)
+Completed 200 OK in 14ms (Views: 13.9ms | ActiveRecord: 0.0ms | Allocations: 3100)
+  [1m[36mTRANSACTION (3.0ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (3.3ms)[0m  [1m[35mBEGIN[0m
+---------------------------------------------
+SharedControllerTest: test_should_get__header
+---------------------------------------------
+Started GET "/shared/_header" for 127.0.0.1 at 2023-05-15 19:14:16 +0300
+Processing by SharedController#_header as HTML
+  Rendering layout layouts/application.html.haml
+  Rendering shared/_header.html.haml within layouts/application
+  Rendered shared/_header.html.haml within layouts/application (Duration: 0.3ms | Allocations: 121)
+  Rendered shared/_header.html.haml (Duration: 0.1ms | Allocations: 118)
+  Rendered shared/_footer.html.haml (Duration: 0.0ms | Allocations: 33)
+  Rendered layout layouts/application.html.haml (Duration: 4.3ms | Allocations: 2488)
+Completed 200 OK in 11ms (Views: 10.9ms | ActiveRecord: 0.0ms | Allocations: 2706)
+  [1m[36mTRANSACTION (4.7ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+-----------------------------------------
+MainControllerTest: test_should_get_about
+-----------------------------------------
+Started GET "/main/about" for 127.0.0.1 at 2023-05-15 19:14:16 +0300
+Processing by MainController#about as HTML
+  Rendering layout layouts/application.html.haml
+  Rendering main/about.html.haml within layouts/application
+  Rendered main/about.html.haml within layouts/application (Duration: 42.3ms | Allocations: 1495)
+  Rendered shared/_header.html.haml (Duration: 0.2ms | Allocations: 151)
+  Rendered shared/_footer.html.haml (Duration: 0.0ms | Allocations: 34)
+  Rendered layout layouts/application.html.haml (Duration: 44.1ms | Allocations: 3978)
+Completed 200 OK in 55ms (Views: 55.1ms | ActiveRecord: 0.0ms | Allocations: 4581)
+  [1m[36mTRANSACTION (0.6ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[35mBEGIN[0m
+----------------------------------------
+MainControllerTest: test_should_get_help
+----------------------------------------
+Started GET "/main/help" for 127.0.0.1 at 2023-05-15 19:14:16 +0300
+Processing by MainController#help as HTML
+  Rendering layout layouts/application.html.haml
+  Rendering main/help.html.haml within layouts/application
+  Rendered main/help.html.haml within layouts/application (Duration: 7.2ms | Allocations: 1492)
+  Rendered shared/_header.html.haml (Duration: 0.1ms | Allocations: 122)
+  Rendered shared/_footer.html.haml (Duration: 0.0ms | Allocations: 33)
+  Rendered layout layouts/application.html.haml (Duration: 8.7ms | Allocations: 3864)
+Completed 200 OK in 9ms (Views: 9.0ms | ActiveRecord: 0.0ms | Allocations: 4138)
+  [1m[36mTRANSACTION (0.5ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[35mBEGIN[0m
+-----------------------------------------
+MainControllerTest: test_should_get_index
+-----------------------------------------
+Started GET "/main/index" for 127.0.0.1 at 2023-05-15 19:14:16 +0300
+Processing by MainController#index as HTML
+  Rendering layout layouts/application.html.haml
+  Rendering main/index.html.haml within layouts/application
+  Rendered main/index.html.haml within layouts/application (Duration: 3.8ms | Allocations: 1492)
+  Rendered shared/_header.html.haml (Duration: 0.1ms | Allocations: 122)
+  Rendered shared/_footer.html.haml (Duration: 0.0ms | Allocations: 33)
+  Rendered layout layouts/application.html.haml (Duration: 5.5ms | Allocations: 3864)
+Completed 200 OK in 6ms (Views: 5.8ms | ActiveRecord: 0.0ms | Allocations: 4138)
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mBEGIN[0m
+--------------------------------------------
+MainControllerTest: test_should_get_contacts
+--------------------------------------------
+Started GET "/main/contacts" for 127.0.0.1 at 2023-05-15 19:14:16 +0300
+Processing by MainController#contacts as HTML
+  Rendering layout layouts/application.html.haml
+  Rendering main/contacts.html.haml within layouts/application
+  Rendered main/contacts.html.haml within layouts/application (Duration: 4.6ms | Allocations: 1492)
+  Rendered shared/_header.html.haml (Duration: 0.1ms | Allocations: 122)
+  Rendered shared/_footer.html.haml (Duration: 0.0ms | Allocations: 33)
+  Rendered layout layouts/application.html.haml (Duration: 6.1ms | Allocations: 3864)
+Completed 200 OK in 7ms (Views: 6.4ms | ActiveRecord: 0.0ms | Allocations: 4138)
+  [1m[36mTRANSACTION (3.5ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mActiveRecord::InternalMetadata Pluck (0.5ms)[0m  [1m[34mSELECT "ar_internal_metadata"."value" FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 LIMIT $2[0m  [["key", "schema_sha1"], ["LIMIT", 1]]
+  [1m[36mActiveRecord::SchemaMigration Pluck (0.5ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.6ms)[0m  [1m[35mALTER TABLE "users" DISABLE TRIGGER ALL;ALTER TABLE "schema_migrations" DISABLE TRIGGER ALL;ALTER TABLE "ar_internal_metadata" DISABLE TRIGGER ALL[0m
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mTRANSACTION (2.5ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (2.8ms)[0m  [1m[31mDELETE FROM "users";
+INSERT INTO "users" ("id", "name", "email", "created_at", "updated_at") VALUES (980190962, 'MyString', 'MyString', '2023-05-15 16:15:41.553823', '2023-05-15 16:15:41.553823'), (298486374, 'MyString', 'MyString', '2023-05-15 16:15:41.553823', '2023-05-15 16:15:41.553823')[0m
+  [1m[36mTRANSACTION (20.6ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mTRANSACTION (8.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.1ms)[0m  [1m[35mALTER TABLE "users" ENABLE TRIGGER ALL;ALTER TABLE "schema_migrations" ENABLE TRIGGER ALL;ALTER TABLE "ar_internal_metadata" ENABLE TRIGGER ALL[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (8.9ms)[0m  [1m[35mdo $$
+  declare r record;
+BEGIN
+FOR r IN (
+  SELECT FORMAT(
+    'UPDATE pg_constraint SET convalidated=false WHERE conname = ''%I'' AND connamespace::regnamespace = ''%I''::regnamespace; ALTER TABLE %I.%I VALIDATE CONSTRAINT %I;',
+    constraint_name,
+    table_schema,
+    table_schema,
+    table_name,
+    constraint_name
+  ) AS constraint_check
+  FROM information_schema.table_constraints WHERE constraint_type = 'FOREIGN KEY'
+)
+  LOOP
+    EXECUTE (r.constraint_check);
+  END LOOP;
+END;
+$$;
+[0m
+  [1m[36mTRANSACTION (1.1ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mTRANSACTION (2.4ms)[0m  [1m[35mBEGIN[0m
+---------------------------------------------
+UsersControllerTest: test_should_destroy_user
+---------------------------------------------
+  [1m[36mUser Load (0.4ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+  [1m[36mUser Count (0.5ms)[0m  [1m[34mSELECT COUNT(*) FROM "users"[0m
+Started DELETE "/users/980190962" for 127.0.0.1 at 2023-05-15 19:15:41 +0300
+Processing by UsersController#destroy as HTML
+  Parameters: {"id"=>"980190962"}
+  [1m[36mUser Load (0.5ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Destroy (0.4ms)[0m  [1m[31mDELETE FROM "users" WHERE "users"."id" = $1[0m  [["id", 980190962]]
+  [1m[36mTRANSACTION (0.5ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Redirected to http://www.example.com/users
+Completed 302 Found in 11ms (ActiveRecord: 1.7ms | Allocations: 2553)
+  [1m[36mUser Count (0.5ms)[0m  [1m[34mSELECT COUNT(*) FROM "users"[0m
+  [1m[36mTRANSACTION (0.6ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[35mBEGIN[0m
+------------------------------------------
+UsersControllerTest: test_should_show_user
+------------------------------------------
+  [1m[36mUser Load (0.5ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+Started GET "/users/980190962" for 127.0.0.1 at 2023-05-15 19:15:41 +0300
+Processing by UsersController#show as HTML
+  Parameters: {"id"=>"980190962"}
+  [1m[36mUser Load (0.5ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+  Rendering layout layouts/application.html.haml
+  Rendering users/show.html.haml within layouts/application
+  Rendered users/show.html.haml within layouts/application (Duration: 65.2ms | Allocations: 9645)
+  Rendered shared/_header.html.haml (Duration: 4.4ms | Allocations: 3372)
+  Rendered shared/_footer.html.haml (Duration: 3.3ms | Allocations: 1801)
+  Rendered layout layouts/application.html.haml (Duration: 217.3ms | Allocations: 64071)
+Completed 200 OK in 224ms (Views: 220.1ms | ActiveRecord: 0.5ms | Allocations: 66094)
+  [1m[36mTRANSACTION (0.5ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.7ms)[0m  [1m[35mBEGIN[0m
+------------------------------------------
+UsersControllerTest: test_should_get_index
+------------------------------------------
+  [1m[36mUser Load (0.5ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+Started GET "/users" for 127.0.0.1 at 2023-05-15 19:15:42 +0300
+Processing by UsersController#index as HTML
+  Rendering layout layouts/application.html.haml
+  Rendering users/index.html.haml within layouts/application
+  [1m[36mUser Load (0.6ms)[0m  [1m[34mSELECT "users".* FROM "users"[0m
+  Rendered users/index.html.haml within layouts/application (Duration: 6.1ms | Allocations: 6418)
+  Rendered shared/_header.html.haml (Duration: 0.1ms | Allocations: 118)
+  Rendered shared/_footer.html.haml (Duration: 0.1ms | Allocations: 33)
+  Rendered layout layouts/application.html.haml (Duration: 7.7ms | Allocations: 8785)
+Completed 200 OK in 8ms (Views: 7.4ms | ActiveRecord: 0.6ms | Allocations: 9101)
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mBEGIN[0m
+--------------------------------------------
+UsersControllerTest: test_should_update_user
+--------------------------------------------
+  [1m[36mUser Load (1.8ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+Started PATCH "/users/980190962" for 127.0.0.1 at 2023-05-15 19:15:42 +0300
+Processing by UsersController#update as HTML
+  Parameters: {"user"=>{"email"=>"MyString", "name"=>"MyString"}, "id"=>"980190962"}
+  [1m[36mUser Load (8.3ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+Redirected to http://www.example.com/users/980190962
+Completed 302 Found in 16ms (ActiveRecord: 8.3ms | Allocations: 827)
+  [1m[36mTRANSACTION (4.5ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (7.5ms)[0m  [1m[35mBEGIN[0m
+----------------------------------------
+UsersControllerTest: test_should_get_new
+----------------------------------------
+  [1m[36mUser Load (4.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+Started GET "/users/new" for 127.0.0.1 at 2023-05-15 19:15:42 +0300
+Processing by UsersController#new as HTML
+  Rendering layout layouts/application.html.haml
+  Rendering users/new.html.haml within layouts/application
+  Rendered users/_form.html.haml (Duration: 48.5ms | Allocations: 7783)
+  Rendered users/new.html.haml within layouts/application (Duration: 97.3ms | Allocations: 9882)
+  Rendered shared/_header.html.haml (Duration: 0.1ms | Allocations: 117)
+  Rendered shared/_footer.html.haml (Duration: 0.0ms | Allocations: 33)
+  Rendered layout layouts/application.html.haml (Duration: 99.2ms | Allocations: 12278)
+Completed 200 OK in 103ms (Views: 102.3ms | ActiveRecord: 0.0ms | Allocations: 12596)
+  [1m[36mTRANSACTION (0.5ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[35mBEGIN[0m
+-----------------------------------------
+UsersControllerTest: test_should_get_edit
+-----------------------------------------
+  [1m[36mUser Load (0.6ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+Started GET "/users/980190962/edit" for 127.0.0.1 at 2023-05-15 19:15:42 +0300
+Processing by UsersController#edit as HTML
+  Parameters: {"id"=>"980190962"}
+  [1m[36mUser Load (0.4ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+  Rendering layout layouts/application.html.haml
+  Rendering users/edit.html.haml within layouts/application
+  Rendered users/_form.html.haml (Duration: 0.7ms | Allocations: 687)
+  Rendered users/edit.html.haml within layouts/application (Duration: 5.2ms | Allocations: 3116)
+  Rendered shared/_header.html.haml (Duration: 0.1ms | Allocations: 117)
+  Rendered shared/_footer.html.haml (Duration: 0.0ms | Allocations: 33)
+  Rendered layout layouts/application.html.haml (Duration: 7.0ms | Allocations: 5474)
+Completed 200 OK in 8ms (Views: 7.3ms | ActiveRecord: 0.4ms | Allocations: 5867)
+  [1m[36mTRANSACTION (0.6ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (2.1ms)[0m  [1m[35mBEGIN[0m
+--------------------------------------------
+UsersControllerTest: test_should_create_user
+--------------------------------------------
+  [1m[36mUser Load (4.3ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+  [1m[36mUser Count (6.9ms)[0m  [1m[34mSELECT COUNT(*) FROM "users"[0m
+Started POST "/users" for 127.0.0.1 at 2023-05-15 19:15:42 +0300
+Processing by UsersController#create as HTML
+  Parameters: {"user"=>{"email"=>"MyString", "name"=>"MyString"}}
+  [1m[36mTRANSACTION (3.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Create (6.1ms)[0m  [1m[32mINSERT INTO "users" ("name", "email", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "MyString"], ["email", "MyString"], ["created_at", "2023-05-15 16:15:42.465424"], ["updated_at", "2023-05-15 16:15:42.465424"]]
+  [1m[36mTRANSACTION (5.2ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Redirected to http://www.example.com/users/980190963
+Completed 302 Found in 22ms (ActiveRecord: 14.4ms | Allocations: 813)
+  [1m[36mUser Count (0.6ms)[0m  [1m[34mSELECT COUNT(*) FROM "users"[0m
+  [1m[36mUser Load (1.0ms)[0m  [1m[34mSELECT "users".* FROM "users" ORDER BY "users"."id" DESC LIMIT $1[0m  [["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mBEGIN[0m
+--------------------------------------------
+MainControllerTest: test_should_get_contacts
+--------------------------------------------
+Started GET "/main/contacts" for 127.0.0.1 at 2023-05-15 19:15:42 +0300
+Processing by MainController#contacts as HTML
+  Rendering layout layouts/application.html.haml
+  Rendering main/contacts.html.haml within layouts/application
+  Rendered main/contacts.html.haml within layouts/application (Duration: 4.0ms | Allocations: 1495)
+  Rendered shared/_header.html.haml (Duration: 0.1ms | Allocations: 151)
+  Rendered shared/_footer.html.haml (Duration: 0.0ms | Allocations: 34)
+  Rendered layout layouts/application.html.haml (Duration: 5.9ms | Allocations: 3978)
+Completed 200 OK in 7ms (Views: 6.9ms | ActiveRecord: 0.0ms | Allocations: 4618)
+  [1m[36mTRANSACTION (1.0ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.5ms)[0m  [1m[35mBEGIN[0m
+-----------------------------------------
+MainControllerTest: test_should_get_index
+-----------------------------------------
+Started GET "/main/index" for 127.0.0.1 at 2023-05-15 19:15:42 +0300
+Processing by MainController#index as HTML
+  Rendering layout layouts/application.html.haml
+  Rendering main/index.html.haml within layouts/application
+  Rendered main/index.html.haml within layouts/application (Duration: 57.0ms | Allocations: 1492)
+  Rendered shared/_header.html.haml (Duration: 0.1ms | Allocations: 122)
+  Rendered shared/_footer.html.haml (Duration: 0.0ms | Allocations: 33)
+  Rendered layout layouts/application.html.haml (Duration: 58.4ms | Allocations: 3864)
+Completed 200 OK in 59ms (Views: 58.6ms | ActiveRecord: 0.0ms | Allocations: 4138)
+  [1m[36mTRANSACTION (1.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (3.9ms)[0m  [1m[35mBEGIN[0m
+----------------------------------------
+MainControllerTest: test_should_get_help
+----------------------------------------
+Started GET "/main/help" for 127.0.0.1 at 2023-05-15 19:15:42 +0300
+Processing by MainController#help as HTML
+  Rendering layout layouts/application.html.haml
+  Rendering main/help.html.haml within layouts/application
+  Rendered main/help.html.haml within layouts/application (Duration: 42.6ms | Allocations: 1492)
+  Rendered shared/_header.html.haml (Duration: 0.1ms | Allocations: 122)
+  Rendered shared/_footer.html.haml (Duration: 0.0ms | Allocations: 33)
+  Rendered layout layouts/application.html.haml (Duration: 52.5ms | Allocations: 3864)
+Completed 200 OK in 59ms (Views: 56.8ms | ActiveRecord: 0.0ms | Allocations: 4138)
+  [1m[36mTRANSACTION (5.9ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (5.8ms)[0m  [1m[35mBEGIN[0m
+-----------------------------------------
+MainControllerTest: test_should_get_about
+-----------------------------------------
+Started GET "/main/about" for 127.0.0.1 at 2023-05-15 19:15:42 +0300
+Processing by MainController#about as HTML
+  Rendering layout layouts/application.html.haml
+  Rendering main/about.html.haml within layouts/application
+  Rendered main/about.html.haml within layouts/application (Duration: 52.5ms | Allocations: 1492)
+  Rendered shared/_header.html.haml (Duration: 0.2ms | Allocations: 122)
+  Rendered shared/_footer.html.haml (Duration: 0.0ms | Allocations: 33)
+  Rendered layout layouts/application.html.haml (Duration: 57.7ms | Allocations: 3864)
+Completed 200 OK in 58ms (Views: 57.9ms | ActiveRecord: 0.0ms | Allocations: 4138)
+  [1m[36mTRANSACTION (2.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+---------------------------------------------
+SharedControllerTest: test_should_get__header
+---------------------------------------------
+Started GET "/shared/_header" for 127.0.0.1 at 2023-05-15 19:15:42 +0300
+Processing by SharedController#_header as HTML
+  Rendering layout layouts/application.html.haml
+  Rendering shared/_header.html.haml within layouts/application
+  Rendered shared/_header.html.haml within layouts/application (Duration: 0.3ms | Allocations: 154)
+  Rendered shared/_header.html.haml (Duration: 0.1ms | Allocations: 119)
+  Rendered shared/_footer.html.haml (Duration: 0.0ms | Allocations: 34)
+  Rendered layout layouts/application.html.haml (Duration: 2.4ms | Allocations: 2600)
+Completed 200 OK in 27ms (Views: 27.0ms | ActiveRecord: 0.0ms | Allocations: 3147)
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+---------------------------------------------
+SharedControllerTest: test_should_get__footer
+---------------------------------------------
+Started GET "/shared/_footer" for 127.0.0.1 at 2023-05-15 19:15:42 +0300
+Processing by SharedController#_footer as HTML
+  Rendering layout layouts/application.html.haml
+  Rendering shared/_footer.html.haml within layouts/application
+  Rendered shared/_footer.html.haml within layouts/application (Duration: 0.1ms | Allocations: 37)
+  Rendered shared/_header.html.haml (Duration: 0.1ms | Allocations: 118)
+  Rendered shared/_footer.html.haml (Duration: 0.1ms | Allocations: 33)
+  Rendered layout layouts/application.html.haml (Duration: 2.4ms | Allocations: 2404)
+Completed 200 OK in 3ms (Views: 2.6ms | ActiveRecord: 0.0ms | Allocations: 2622)
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mActiveRecord::InternalMetadata Pluck (7.4ms)[0m  [1m[34mSELECT "ar_internal_metadata"."value" FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 LIMIT $2[0m  [["key", "schema_sha1"], ["LIMIT", 1]]
+  [1m[36mActiveRecord::SchemaMigration Pluck (2.9ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mTRANSACTION (2.6ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (11.1ms)[0m  [1m[35mALTER TABLE "users" DISABLE TRIGGER ALL;ALTER TABLE "schema_migrations" DISABLE TRIGGER ALL;ALTER TABLE "ar_internal_metadata" DISABLE TRIGGER ALL[0m
+  [1m[36mTRANSACTION (9.8ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.5ms)[0m  [1m[31mDELETE FROM "users";
+INSERT INTO "users" ("id", "name", "email", "created_at", "updated_at") VALUES (980190962, 'MyString', 'MyString', '2023-05-15 16:20:04.843555', '2023-05-15 16:20:04.843555'), (298486374, 'MyString', 'MyString', '2023-05-15 16:20:04.843555', '2023-05-15 16:20:04.843555')[0m
+  [1m[36mTRANSACTION (6.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mTRANSACTION (1.3ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.1ms)[0m  [1m[35mALTER TABLE "users" ENABLE TRIGGER ALL;ALTER TABLE "schema_migrations" ENABLE TRIGGER ALL;ALTER TABLE "ar_internal_metadata" ENABLE TRIGGER ALL[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mTRANSACTION (5.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (12.6ms)[0m  [1m[35mdo $$
+  declare r record;
+BEGIN
+FOR r IN (
+  SELECT FORMAT(
+    'UPDATE pg_constraint SET convalidated=false WHERE conname = ''%I'' AND connamespace::regnamespace = ''%I''::regnamespace; ALTER TABLE %I.%I VALIDATE CONSTRAINT %I;',
+    constraint_name,
+    table_schema,
+    table_schema,
+    table_name,
+    constraint_name
+  ) AS constraint_check
+  FROM information_schema.table_constraints WHERE constraint_type = 'FOREIGN KEY'
+)
+  LOOP
+    EXECUTE (r.constraint_check);
+  END LOOP;
+END;
+$$;
+[0m
+  [1m[36mTRANSACTION (4.2ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mTRANSACTION (0.5ms)[0m  [1m[35mBEGIN[0m
+--------------------------------------------
+UsersControllerTest: test_should_update_user
+--------------------------------------------
+  [1m[36mUser Load (0.5ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+Started PATCH "/users/980190962" for 127.0.0.1 at 2023-05-15 19:20:05 +0300
+Processing by UsersController#update as HTML
+  Parameters: {"user"=>{"email"=>"MyString", "name"=>"MyString"}, "id"=>"980190962"}
+  [1m[36mUser Load (0.5ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+Redirected to http://www.example.com/users/980190962
+Completed 302 Found in 53ms (ActiveRecord: 0.5ms | Allocations: 2751)
+  [1m[36mTRANSACTION (0.8ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mBEGIN[0m
+---------------------------------------------
+UsersControllerTest: test_should_destroy_user
+---------------------------------------------
+  [1m[36mUser Load (0.4ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+  [1m[36mUser Count (0.7ms)[0m  [1m[34mSELECT COUNT(*) FROM "users"[0m
+Started DELETE "/users/980190962" for 127.0.0.1 at 2023-05-15 19:20:05 +0300
+Processing by UsersController#destroy as HTML
+  Parameters: {"id"=>"980190962"}
+  [1m[36mUser Load (0.4ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Destroy (0.5ms)[0m  [1m[31mDELETE FROM "users" WHERE "users"."id" = $1[0m  [["id", 980190962]]
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Redirected to http://www.example.com/users
+Completed 302 Found in 3ms (ActiveRecord: 1.5ms | Allocations: 633)
+  [1m[36mUser Count (0.4ms)[0m  [1m[34mSELECT COUNT(*) FROM "users"[0m
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+-----------------------------------------
+UsersControllerTest: test_should_get_edit
+-----------------------------------------
+  [1m[36mUser Load (0.2ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+Started GET "/users/980190962/edit" for 127.0.0.1 at 2023-05-15 19:20:05 +0300
+Processing by UsersController#edit as HTML
+  Parameters: {"id"=>"980190962"}
+  [1m[36mUser Load (14.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+  Rendering layout layouts/application.html.haml
+  Rendering users/edit.html.haml within layouts/application
+  Rendered users/_form.html.haml (Duration: 11.7ms | Allocations: 8045)
+  Rendered users/edit.html.haml within layouts/application (Duration: 68.3ms | Allocations: 16437)
+  Rendered shared/_header.html.haml (Duration: 82.3ms | Allocations: 3364)
+  Rendered shared/_footer.html.haml (Duration: 3.6ms | Allocations: 1801)
+  Rendered layout layouts/application.html.haml (Duration: 320.7ms | Allocations: 70593)
+Completed 200 OK in 386ms (Views: 344.7ms | ActiveRecord: 14.1ms | Allocations: 72591)
+  [1m[36mTRANSACTION (0.5ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mBEGIN[0m
+--------------------------------------------
+UsersControllerTest: test_should_create_user
+--------------------------------------------
+  [1m[36mUser Load (0.6ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+  [1m[36mUser Count (0.4ms)[0m  [1m[34mSELECT COUNT(*) FROM "users"[0m
+Started POST "/users" for 127.0.0.1 at 2023-05-15 19:20:05 +0300
+Processing by UsersController#create as HTML
+  Parameters: {"user"=>{"email"=>"MyString", "name"=>"MyString"}}
+  [1m[36mTRANSACTION (0.5ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Create (0.5ms)[0m  [1m[32mINSERT INTO "users" ("name", "email", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "MyString"], ["email", "MyString"], ["created_at", "2023-05-15 16:20:05.717201"], ["updated_at", "2023-05-15 16:20:05.717201"]]
+  [1m[36mTRANSACTION (1.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Redirected to http://www.example.com/users/980190963
+Completed 302 Found in 4ms (ActiveRecord: 2.1ms | Allocations: 846)
+  [1m[36mUser Count (0.4ms)[0m  [1m[34mSELECT COUNT(*) FROM "users"[0m
+  [1m[36mUser Load (1.5ms)[0m  [1m[34mSELECT "users".* FROM "users" ORDER BY "users"."id" DESC LIMIT $1[0m  [["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (7.2ms)[0m  [1m[35mBEGIN[0m
+------------------------------------------
+UsersControllerTest: test_should_show_user
+------------------------------------------
+  [1m[36mUser Load (6.2ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+Started GET "/users/980190962" for 127.0.0.1 at 2023-05-15 19:20:05 +0300
+Processing by UsersController#show as HTML
+  Parameters: {"id"=>"980190962"}
+  [1m[36mUser Load (8.6ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+  Rendering layout layouts/application.html.haml
+  Rendering users/show.html.haml within layouts/application
+  Rendered users/show.html.haml within layouts/application (Duration: 76.7ms | Allocations: 3676)
+  Rendered shared/_header.html.haml (Duration: 0.1ms | Allocations: 118)
+  Rendered shared/_footer.html.haml (Duration: 0.0ms | Allocations: 33)
+  Rendered layout layouts/application.html.haml (Duration: 79.9ms | Allocations: 6065)
+Completed 200 OK in 112ms (Views: 80.1ms | ActiveRecord: 8.6ms | Allocations: 6484)
+  [1m[36mTRANSACTION (3.4ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (2.8ms)[0m  [1m[35mBEGIN[0m
+------------------------------------------
+UsersControllerTest: test_should_get_index
+------------------------------------------
+  [1m[36mUser Load (2.6ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+Started GET "/users" for 127.0.0.1 at 2023-05-15 19:20:05 +0300
+Processing by UsersController#index as HTML
+  Rendering layout layouts/application.html.haml
+  Rendering users/index.html.haml within layouts/application
+  [1m[36mUser Load (7.8ms)[0m  [1m[34mSELECT "users".* FROM "users"[0m
+  Rendered users/index.html.haml within layouts/application (Duration: 108.9ms | Allocations: 6353)
+  Rendered shared/_header.html.haml (Duration: 0.1ms | Allocations: 118)
+  Rendered shared/_footer.html.haml (Duration: 0.0ms | Allocations: 33)
+  Rendered layout layouts/application.html.haml (Duration: 112.1ms | Allocations: 8720)
+Completed 200 OK in 114ms (Views: 105.4ms | ActiveRecord: 7.8ms | Allocations: 9035)
+  [1m[36mTRANSACTION (3.3ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (1.5ms)[0m  [1m[35mBEGIN[0m
+----------------------------------------
+UsersControllerTest: test_should_get_new
+----------------------------------------
+  [1m[36mUser Load (0.9ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+Started GET "/users/new" for 127.0.0.1 at 2023-05-15 19:20:06 +0300
+Processing by UsersController#new as HTML
+  Rendering layout layouts/application.html.haml
+  Rendering users/new.html.haml within layouts/application
+  Rendered users/_form.html.haml (Duration: 2.5ms | Allocations: 602)
+  Rendered users/new.html.haml within layouts/application (Duration: 16.4ms | Allocations: 2640)
+  Rendered shared/_header.html.haml (Duration: 0.1ms | Allocations: 117)
+  Rendered shared/_footer.html.haml (Duration: 0.0ms | Allocations: 33)
+  Rendered layout layouts/application.html.haml (Duration: 23.0ms | Allocations: 5006)
+Completed 200 OK in 24ms (Views: 23.2ms | ActiveRecord: 0.0ms | Allocations: 5297)
+  [1m[36mTRANSACTION (1.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN[0m
+----------------------------------------
+MainControllerTest: test_should_get_help
+----------------------------------------
+Started GET "/main/help" for 127.0.0.1 at 2023-05-15 19:20:06 +0300
+Processing by MainController#help as HTML
+  Rendering layout layouts/application.html.haml
+  Rendering main/help.html.haml within layouts/application
+  Rendered main/help.html.haml within layouts/application (Duration: 72.6ms | Allocations: 1495)
+  Rendered shared/_header.html.haml (Duration: 0.2ms | Allocations: 151)
+  Rendered shared/_footer.html.haml (Duration: 0.0ms | Allocations: 34)
+  Rendered layout layouts/application.html.haml (Duration: 76.8ms | Allocations: 3977)
+Completed 200 OK in 87ms (Views: 87.1ms | ActiveRecord: 0.0ms | Allocations: 4617)
+  [1m[36mTRANSACTION (3.6ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (4.5ms)[0m  [1m[35mBEGIN[0m
+--------------------------------------------
+MainControllerTest: test_should_get_contacts
+--------------------------------------------
+Started GET "/main/contacts" for 127.0.0.1 at 2023-05-15 19:20:06 +0300
+Processing by MainController#contacts as HTML
+  Rendering layout layouts/application.html.haml
+  Rendering main/contacts.html.haml within layouts/application
+  Rendered main/contacts.html.haml within layouts/application (Duration: 49.8ms | Allocations: 1492)
+  Rendered shared/_header.html.haml (Duration: 0.1ms | Allocations: 122)
+  Rendered shared/_footer.html.haml (Duration: 0.1ms | Allocations: 33)
+  Rendered layout layouts/application.html.haml (Duration: 66.2ms | Allocations: 3865)
+Completed 200 OK in 67ms (Views: 66.5ms | ActiveRecord: 0.0ms | Allocations: 4139)
+  [1m[36mTRANSACTION (4.8ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (2.5ms)[0m  [1m[35mBEGIN[0m
+-----------------------------------------
+MainControllerTest: test_should_get_index
+-----------------------------------------
+Started GET "/main/index" for 127.0.0.1 at 2023-05-15 19:20:06 +0300
+Processing by MainController#index as HTML
+  Rendering layout layouts/application.html.haml
+  Rendering main/index.html.haml within layouts/application
+  Rendered main/index.html.haml within layouts/application (Duration: 48.0ms | Allocations: 1492)
+  Rendered shared/_header.html.haml (Duration: 0.2ms | Allocations: 122)
+  Rendered shared/_footer.html.haml (Duration: 0.0ms | Allocations: 33)
+  Rendered layout layouts/application.html.haml (Duration: 56.1ms | Allocations: 3864)
+Completed 200 OK in 57ms (Views: 56.4ms | ActiveRecord: 0.0ms | Allocations: 4138)
+  [1m[36mTRANSACTION (7.9ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (7.5ms)[0m  [1m[35mBEGIN[0m
+-----------------------------------------
+MainControllerTest: test_should_get_about
+-----------------------------------------
+Started GET "/main/about" for 127.0.0.1 at 2023-05-15 19:20:06 +0300
+Processing by MainController#about as HTML
+  Rendering layout layouts/application.html.haml
+  Rendering main/about.html.haml within layouts/application
+  Rendered main/about.html.haml within layouts/application (Duration: 18.8ms | Allocations: 1492)
+  Rendered shared/_header.html.haml (Duration: 0.2ms | Allocations: 122)
+  Rendered shared/_footer.html.haml (Duration: 0.1ms | Allocations: 33)
+  Rendered layout layouts/application.html.haml (Duration: 23.5ms | Allocations: 3864)
+Completed 200 OK in 29ms (Views: 27.0ms | ActiveRecord: 0.0ms | Allocations: 4138)
+  [1m[36mTRANSACTION (25.7ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (7.6ms)[0m  [1m[35mBEGIN[0m
+---------------------------------------------
+SharedControllerTest: test_should_get__header
+---------------------------------------------
+Started GET "/shared/_header" for 127.0.0.1 at 2023-05-15 19:20:06 +0300
+Processing by SharedController#_header as HTML
+  Rendering layout layouts/application.html.haml
+  Rendering shared/_header.html.haml within layouts/application
+  Rendered shared/_header.html.haml within layouts/application (Duration: 0.2ms | Allocations: 154)
+  Rendered shared/_header.html.haml (Duration: 0.1ms | Allocations: 119)
+  Rendered shared/_footer.html.haml (Duration: 0.0ms | Allocations: 34)
+  Rendered layout layouts/application.html.haml (Duration: 1.6ms | Allocations: 2600)
+Completed 200 OK in 9ms (Views: 8.2ms | ActiveRecord: 0.0ms | Allocations: 3147)
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+---------------------------------------------
+SharedControllerTest: test_should_get__footer
+---------------------------------------------
+Started GET "/shared/_footer" for 127.0.0.1 at 2023-05-15 19:20:06 +0300
+Processing by SharedController#_footer as HTML
+  Rendering layout layouts/application.html.haml
+  Rendering shared/_footer.html.haml within layouts/application
+  Rendered shared/_footer.html.haml within layouts/application (Duration: 0.1ms | Allocations: 37)
+  Rendered shared/_header.html.haml (Duration: 0.1ms | Allocations: 118)
+  Rendered shared/_footer.html.haml (Duration: 0.0ms | Allocations: 33)
+  Rendered layout layouts/application.html.haml (Duration: 4.7ms | Allocations: 2404)
+Completed 200 OK in 5ms (Views: 4.9ms | ActiveRecord: 0.0ms | Allocations: 2622)
+  [1m[36mTRANSACTION (3.4ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mActiveRecord::InternalMetadata Pluck (2.9ms)[0m  [1m[34mSELECT "ar_internal_metadata"."value" FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 LIMIT $2[0m  [["key", "schema_sha1"], ["LIMIT", 1]]
+  [1m[36mActiveRecord::SchemaMigration Pluck (0.7ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.5ms)[0m  [1m[35mALTER TABLE "users" DISABLE TRIGGER ALL;ALTER TABLE "schema_migrations" DISABLE TRIGGER ALL;ALTER TABLE "ar_internal_metadata" DISABLE TRIGGER ALL[0m
+  [1m[36mTRANSACTION (1.4ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mTRANSACTION (5.8ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (6.9ms)[0m  [1m[31mDELETE FROM "users";
+INSERT INTO "users" ("id", "name", "email", "created_at", "updated_at") VALUES (980190962, 'MyString', 'MyString', '2023-05-15 16:28:12.733955', '2023-05-15 16:28:12.733955'), (298486374, 'MyString', 'MyString', '2023-05-15 16:28:12.733955', '2023-05-15 16:28:12.733955')[0m
+  [1m[36mTRANSACTION (21.8ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.1ms)[0m  [1m[35mALTER TABLE "users" ENABLE TRIGGER ALL;ALTER TABLE "schema_migrations" ENABLE TRIGGER ALL;ALTER TABLE "ar_internal_metadata" ENABLE TRIGGER ALL[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (7.6ms)[0m  [1m[35mdo $$
+  declare r record;
+BEGIN
+FOR r IN (
+  SELECT FORMAT(
+    'UPDATE pg_constraint SET convalidated=false WHERE conname = ''%I'' AND connamespace::regnamespace = ''%I''::regnamespace; ALTER TABLE %I.%I VALIDATE CONSTRAINT %I;',
+    constraint_name,
+    table_schema,
+    table_schema,
+    table_name,
+    constraint_name
+  ) AS constraint_check
+  FROM information_schema.table_constraints WHERE constraint_type = 'FOREIGN KEY'
+)
+  LOOP
+    EXECUTE (r.constraint_check);
+  END LOOP;
+END;
+$$;
+[0m
+  [1m[36mTRANSACTION (5.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[35mBEGIN[0m
+--------------------------------------------
+UsersControllerTest: test_should_create_user
+--------------------------------------------
+  [1m[36mUser Load (0.5ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+  [1m[36mUser Count (0.6ms)[0m  [1m[34mSELECT COUNT(*) FROM "users"[0m
+Started POST "/users" for 127.0.0.1 at 2023-05-15 19:28:13 +0300
+Processing by UsersController#create as HTML
+  Parameters: {"user"=>{"email"=>"MyString", "name"=>"MyString"}}
+  [1m[36mTRANSACTION (0.5ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Create (0.5ms)[0m  [1m[32mINSERT INTO "users" ("name", "email", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "MyString"], ["email", "MyString"], ["created_at", "2023-05-15 16:28:13.167018"], ["updated_at", "2023-05-15 16:28:13.167018"]]
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Redirected to http://www.example.com/users/980190963
+Completed 302 Found in 11ms (ActiveRecord: 1.4ms | Allocations: 2860)
+  [1m[36mUser Count (0.6ms)[0m  [1m[34mSELECT COUNT(*) FROM "users"[0m
+  [1m[36mUser Load (0.4ms)[0m  [1m[34mSELECT "users".* FROM "users" ORDER BY "users"."id" DESC LIMIT $1[0m  [["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.5ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.6ms)[0m  [1m[35mBEGIN[0m
+--------------------------------------------
+UsersControllerTest: test_should_update_user
+--------------------------------------------
+  [1m[36mUser Load (0.4ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+Started PATCH "/users/980190962" for 127.0.0.1 at 2023-05-15 19:28:13 +0300
+Processing by UsersController#update as HTML
+  Parameters: {"user"=>{"email"=>"MyString", "name"=>"MyString"}, "id"=>"980190962"}
+  [1m[36mUser Load (0.4ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+Redirected to http://www.example.com/users/980190962
+Completed 302 Found in 2ms (ActiveRecord: 0.4ms | Allocations: 748)
+  [1m[36mTRANSACTION (0.5ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mBEGIN[0m
+----------------------------------------
+UsersControllerTest: test_should_get_new
+----------------------------------------
+  [1m[36mUser Load (0.4ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+Started GET "/users/new" for 127.0.0.1 at 2023-05-15 19:28:13 +0300
+Processing by UsersController#new as HTML
+  Rendering layout layouts/application.html.haml
+  Rendering users/new.html.haml within layouts/application
+  Rendered users/_form.html.haml (Duration: 12.5ms | Allocations: 7969)
+  Rendered users/new.html.haml within layouts/application (Duration: 69.7ms | Allocations: 15935)
+  Rendered shared/_header.html.haml (Duration: 4.4ms | Allocations: 3364)
+  Rendered shared/_footer.html.haml (Duration: 6.8ms | Allocations: 1801)
+  Rendered layout layouts/application.html.haml (Duration: 272.1ms | Allocations: 69817)
+Completed 200 OK in 320ms (Views: 308.0ms | ActiveRecord: 0.0ms | Allocations: 71712)
+  [1m[36mTRANSACTION (0.6ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mBEGIN[0m
+-----------------------------------------
+UsersControllerTest: test_should_get_edit
+-----------------------------------------
+  [1m[36mUser Load (0.4ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+Started GET "/users/980190962/edit" for 127.0.0.1 at 2023-05-15 19:28:13 +0300
+Processing by UsersController#edit as HTML
+  Parameters: {"id"=>"980190962"}
+  [1m[36mUser Load (0.5ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+  Rendering layout layouts/application.html.haml
+  Rendering users/edit.html.haml within layouts/application
+  Rendered users/_form.html.haml (Duration: 0.9ms | Allocations: 690)
+  Rendered users/edit.html.haml within layouts/application (Duration: 14.7ms | Allocations: 3140)
+  Rendered shared/_header.html.haml (Duration: 0.1ms | Allocations: 117)
+  Rendered shared/_footer.html.haml (Duration: 0.1ms | Allocations: 33)
+  Rendered layout layouts/application.html.haml (Duration: 24.4ms | Allocations: 5528)
+Completed 200 OK in 26ms (Views: 24.7ms | ActiveRecord: 0.5ms | Allocations: 5923)
+  [1m[36mTRANSACTION (12.9ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.9ms)[0m  [1m[35mBEGIN[0m
+---------------------------------------------
+UsersControllerTest: test_should_destroy_user
+---------------------------------------------
+  [1m[36mUser Load (2.7ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+  [1m[36mUser Count (0.2ms)[0m  [1m[34mSELECT COUNT(*) FROM "users"[0m
+Started DELETE "/users/980190962" for 127.0.0.1 at 2023-05-15 19:28:13 +0300
+Processing by UsersController#destroy as HTML
+  Parameters: {"id"=>"980190962"}
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (10.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Destroy (6.5ms)[0m  [1m[31mDELETE FROM "users" WHERE "users"."id" = $1[0m  [["id", 980190962]]
+  [1m[36mTRANSACTION (9.6ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Redirected to http://www.example.com/users
+Completed 302 Found in 41ms (ActiveRecord: 26.2ms | Allocations: 620)
+  [1m[36mUser Count (3.4ms)[0m  [1m[34mSELECT COUNT(*) FROM "users"[0m
+  [1m[36mTRANSACTION (4.6ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (7.7ms)[0m  [1m[35mBEGIN[0m
+------------------------------------------
+UsersControllerTest: test_should_show_user
+------------------------------------------
+  [1m[36mUser Load (3.5ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+Started GET "/users/980190962" for 127.0.0.1 at 2023-05-15 19:28:13 +0300
+Processing by UsersController#show as HTML
+  Parameters: {"id"=>"980190962"}
+  [1m[36mUser Load (10.3ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+  Rendering layout layouts/application.html.haml
+  Rendering users/show.html.haml within layouts/application
+  Rendered users/show.html.haml within layouts/application (Duration: 73.8ms | Allocations: 3671)
+  Rendered shared/_header.html.haml (Duration: 0.1ms | Allocations: 118)
+  Rendered shared/_footer.html.haml (Duration: 0.0ms | Allocations: 33)
+  Rendered layout layouts/application.html.haml (Duration: 75.7ms | Allocations: 6034)
+Completed 200 OK in 107ms (Views: 88.8ms | ActiveRecord: 10.3ms | Allocations: 6451)
+  [1m[36mTRANSACTION (0.6ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (9.9ms)[0m  [1m[35mBEGIN[0m
+------------------------------------------
+UsersControllerTest: test_should_get_index
+------------------------------------------
+  [1m[36mUser Load (6.2ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+Started GET "/users" for 127.0.0.1 at 2023-05-15 19:28:13 +0300
+Processing by UsersController#index as HTML
+  Rendering layout layouts/application.html.haml
+  Rendering users/index.html.haml within layouts/application
+  [1m[36mUser Load (11.0ms)[0m  [1m[34mSELECT "users".* FROM "users"[0m
+  Rendered users/index.html.haml within layouts/application (Duration: 60.2ms | Allocations: 6352)
+  Rendered shared/_header.html.haml (Duration: 0.1ms | Allocations: 118)
+  Rendered shared/_footer.html.haml (Duration: 0.0ms | Allocations: 33)
+  Rendered layout layouts/application.html.haml (Duration: 62.0ms | Allocations: 8719)
+Completed 200 OK in 65ms (Views: 53.6ms | ActiveRecord: 11.0ms | Allocations: 9033)
+  [1m[36mTRANSACTION (3.7ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.9ms)[0m  [1m[35mBEGIN[0m
+---------------------------------------------
+SharedControllerTest: test_should_get__footer
+---------------------------------------------
+Started GET "/shared/_footer" for 127.0.0.1 at 2023-05-15 19:28:13 +0300
+Processing by SharedController#_footer as HTML
+  Rendering layout layouts/application.html.haml
+  Rendering shared/_footer.html.haml within layouts/application
+  Rendered shared/_footer.html.haml within layouts/application (Duration: 0.1ms | Allocations: 64)
+  Rendered shared/_header.html.haml (Duration: 0.1ms | Allocations: 126)
+  Rendered shared/_footer.html.haml (Duration: 0.0ms | Allocations: 33)
+  Rendered layout layouts/application.html.haml (Duration: 3.8ms | Allocations: 2516)
+Completed 200 OK in 12ms (Views: 11.7ms | ActiveRecord: 0.0ms | Allocations: 3100)
+  [1m[36mTRANSACTION (2.9ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (9.0ms)[0m  [1m[35mBEGIN[0m
+---------------------------------------------
+SharedControllerTest: test_should_get__header
+---------------------------------------------
+Started GET "/shared/_header" for 127.0.0.1 at 2023-05-15 19:28:13 +0300
+Processing by SharedController#_header as HTML
+  Rendering layout layouts/application.html.haml
+  Rendering shared/_header.html.haml within layouts/application
+  Rendered shared/_header.html.haml within layouts/application (Duration: 11.1ms | Allocations: 121)
+  Rendered shared/_header.html.haml (Duration: 0.1ms | Allocations: 118)
+  Rendered shared/_footer.html.haml (Duration: 0.0ms | Allocations: 33)
+  Rendered layout layouts/application.html.haml (Duration: 27.0ms | Allocations: 2488)
+Completed 200 OK in 28ms (Views: 27.2ms | ActiveRecord: 0.0ms | Allocations: 2706)
+  [1m[36mTRANSACTION (0.6ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (5.6ms)[0m  [1m[35mBEGIN[0m
+-----------------------------------------
+MainControllerTest: test_should_get_about
+-----------------------------------------
+Started GET "/main/about" for 127.0.0.1 at 2023-05-15 19:28:14 +0300
+Processing by MainController#about as HTML
+  Rendering layout layouts/application.html.haml
+  Rendering main/about.html.haml within layouts/application
+  Rendered main/about.html.haml within layouts/application (Duration: 53.3ms | Allocations: 1495)
+  Rendered shared/_header.html.haml (Duration: 0.2ms | Allocations: 151)
+  Rendered shared/_footer.html.haml (Duration: 0.0ms | Allocations: 34)
+  Rendered layout layouts/application.html.haml (Duration: 55.1ms | Allocations: 3977)
+Completed 200 OK in 60ms (Views: 59.2ms | ActiveRecord: 0.0ms | Allocations: 4580)
+  [1m[36mTRANSACTION (7.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (7.8ms)[0m  [1m[35mBEGIN[0m
+----------------------------------------
+MainControllerTest: test_should_get_help
+----------------------------------------
+Started GET "/main/help" for 127.0.0.1 at 2023-05-15 19:28:14 +0300
+Processing by MainController#help as HTML
+  Rendering layout layouts/application.html.haml
+  Rendering main/help.html.haml within layouts/application
+  Rendered main/help.html.haml within layouts/application (Duration: 37.7ms | Allocations: 1492)
+  Rendered shared/_header.html.haml (Duration: 0.1ms | Allocations: 122)
+  Rendered shared/_footer.html.haml (Duration: 0.1ms | Allocations: 33)
+  Rendered layout layouts/application.html.haml (Duration: 55.6ms | Allocations: 3865)
+Completed 200 OK in 56ms (Views: 55.9ms | ActiveRecord: 0.0ms | Allocations: 4139)
+  [1m[36mTRANSACTION (6.9ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (5.3ms)[0m  [1m[35mBEGIN[0m
+--------------------------------------------
+MainControllerTest: test_should_get_contacts
+--------------------------------------------
+Started GET "/main/contacts" for 127.0.0.1 at 2023-05-15 19:28:14 +0300
+Processing by MainController#contacts as HTML
+  Rendering layout layouts/application.html.haml
+  Rendering main/contacts.html.haml within layouts/application
+  Rendered main/contacts.html.haml within layouts/application (Duration: 101.1ms | Allocations: 1492)
+  Rendered shared/_header.html.haml (Duration: 0.1ms | Allocations: 122)
+  Rendered shared/_footer.html.haml (Duration: 0.0ms | Allocations: 33)
+  Rendered layout layouts/application.html.haml (Duration: 102.7ms | Allocations: 3864)
+Completed 200 OK in 112ms (Views: 109.4ms | ActiveRecord: 0.0ms | Allocations: 4138)
+  [1m[36mTRANSACTION (7.3ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (3.6ms)[0m  [1m[35mBEGIN[0m
+-----------------------------------------
+MainControllerTest: test_should_get_index
+-----------------------------------------
+Started GET "/main/index" for 127.0.0.1 at 2023-05-15 19:28:14 +0300
+Processing by MainController#index as HTML
+  Rendering layout layouts/application.html.haml
+  Rendering main/index.html.haml within layouts/application
+  Rendered main/index.html.haml within layouts/application (Duration: 51.6ms | Allocations: 1492)
+  Rendered shared/_header.html.haml (Duration: 0.1ms | Allocations: 122)
+  Rendered shared/_footer.html.haml (Duration: 0.0ms | Allocations: 33)
+  Rendered layout layouts/application.html.haml (Duration: 57.0ms | Allocations: 3864)
+Completed 200 OK in 58ms (Views: 57.2ms | ActiveRecord: 0.0ms | Allocations: 4138)
+  [1m[36mTRANSACTION (0.6ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mActiveRecord::InternalMetadata Pluck (2.6ms)[0m  [1m[34mSELECT "ar_internal_metadata"."value" FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 LIMIT $2[0m  [["key", "schema_sha1"], ["LIMIT", 1]]
+  [1m[36mActiveRecord::SchemaMigration Pluck (3.3ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mActiveRecord::InternalMetadata Pluck (0.8ms)[0m  [1m[34mSELECT "ar_internal_metadata"."value" FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 LIMIT $2[0m  [["key", "environment"], ["LIMIT", 1]]
+  [1m[36mActiveRecord::SchemaMigration Pluck (0.5ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mActiveRecord::InternalMetadata Pluck (0.6ms)[0m  [1m[34mSELECT "ar_internal_metadata"."value" FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 LIMIT $2[0m  [["key", "environment"], ["LIMIT", 1]]
+  [1m[36mActiveRecord::SchemaMigration Pluck (0.4ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mActiveRecord::InternalMetadata Pluck (0.4ms)[0m  [1m[34mSELECT "ar_internal_metadata"."value" FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 LIMIT $2[0m  [["key", "environment"], ["LIMIT", 1]]
+  [1m[35m (35.0ms)[0m  [1m[35mDROP DATABASE IF EXISTS "my_app_test"[0m
+  [1m[35m (679.5ms)[0m  [1m[35mCREATE DATABASE "my_app_test" ENCODING = 'LATIN1'[0m
+  [1m[35mSQL (1.7ms)[0m  [1m[35mCREATE EXTENSION IF NOT EXISTS "plpgsql"[0m
+  [1m[35m (0.4ms)[0m  [1m[35mDROP TABLE IF EXISTS "images" CASCADE[0m
+  [1m[35m (18.6ms)[0m  [1m[35mCREATE TABLE "images" ("id" bigserial primary key, "name" character varying, "file" character varying, "ave_value" float, "theme_id" integer, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[35m (0.4ms)[0m  [1m[35mDROP TABLE IF EXISTS "themes" CASCADE[0m
+  [1m[35m (11.2ms)[0m  [1m[35mCREATE TABLE "themes" ("id" bigserial primary key, "name" character varying, "qty_items" integer, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[35m (0.4ms)[0m  [1m[35mDROP TABLE IF EXISTS "users" CASCADE[0m
+  [1m[35m (12.2ms)[0m  [1m[35mCREATE TABLE "users" ("id" bigserial primary key, "name" character varying, "email" character varying, "password" character varying, "password_confirmation" character varying, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[35m (0.4ms)[0m  [1m[35mDROP TABLE IF EXISTS "values" CASCADE[0m
+  [1m[35m (6.7ms)[0m  [1m[35mCREATE TABLE "values" ("id" bigserial primary key, "user_id" integer, "image_id" integer, "value" integer, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[35m (10.2ms)[0m  [1m[35mCREATE TABLE "schema_migrations" ("version" character varying NOT NULL PRIMARY KEY)[0m
+  [1m[36mActiveRecord::SchemaMigration Pluck (0.7ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[35m (2.2ms)[0m  [1m[32mINSERT INTO "schema_migrations" (version) VALUES (20230515171418)[0m
+  [1m[35m (1.6ms)[0m  [1m[32mINSERT INTO "schema_migrations" (version) VALUES
+(20230515164057),
+(20230515164141),
+(20230515164206),
+(20230515170401),
+(20230515170607),
+(20230515171233);
+
+[0m
+  [1m[35m (10.0ms)[0m  [1m[35mCREATE TABLE "ar_internal_metadata" ("key" character varying NOT NULL PRIMARY KEY, "value" character varying, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.5ms)[0m  [1m[34mSELECT "ar_internal_metadata".* FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 LIMIT $2[0m  [["key", "environment"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mActiveRecord::InternalMetadata Create (0.9ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "key"[0m  [["key", "environment"], ["value", "test"], ["created_at", "2023-05-22 10:01:12.723032"], ["updated_at", "2023-05-22 10:01:12.723032"]]
+  [1m[36mTRANSACTION (1.5ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.4ms)[0m  [1m[34mSELECT "ar_internal_metadata".* FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 LIMIT $2[0m  [["key", "environment"], ["LIMIT", 1]]
+  [1m[36mActiveRecord::InternalMetadata Load (0.3ms)[0m  [1m[34mSELECT "ar_internal_metadata".* FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 LIMIT $2[0m  [["key", "schema_sha1"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mActiveRecord::InternalMetadata Create (0.4ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "key"[0m  [["key", "schema_sha1"], ["value", "f1c4650db56f09d77b6cc9d373756b0035151e6c"], ["created_at", "2023-05-22 10:01:12.730692"], ["updated_at", "2023-05-22 10:01:12.730692"]]
+  [1m[36mTRANSACTION (1.5ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mActiveRecord::SchemaMigration Pluck (0.5ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (1.5ms)[0m  [1m[35mALTER TABLE "images" DISABLE TRIGGER ALL;ALTER TABLE "themes" DISABLE TRIGGER ALL;ALTER TABLE "users" DISABLE TRIGGER ALL;ALTER TABLE "values" DISABLE TRIGGER ALL;ALTER TABLE "schema_migrations" DISABLE TRIGGER ALL;ALTER TABLE "ar_internal_metadata" DISABLE TRIGGER ALL[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (1.5ms)[0m  [1m[31mDELETE FROM "images";
+DELETE FROM "themes";
+DELETE FROM "users";
+DELETE FROM "values";
+INSERT INTO "images" ("id", "name", "file", "ave_value", "theme_id", "created_at", "updated_at") VALUES (980190962, 'MyString', 'MyString', 1.5, 1, '2023-05-22 10:01:12.973523', '2023-05-22 10:01:12.973523'), (298486374, 'MyString', 'MyString', 1.5, 1, '2023-05-22 10:01:12.973523', '2023-05-22 10:01:12.973523');
+INSERT INTO "themes" ("id", "name", "qty_items", "created_at", "updated_at") VALUES (980190962, 'MyString', 1, '2023-05-22 10:01:12.977931', '2023-05-22 10:01:12.977931'), (298486374, 'MyString', 1, '2023-05-22 10:01:12.977931', '2023-05-22 10:01:12.977931');
+INSERT INTO "users" ("id", "name", "email", "password", "password_confirmation", "created_at", "updated_at") VALUES (980190962, 'MyString', 'MyString', 'MyString', 'MyString', '2023-05-22 10:01:12.980591', '2023-05-22 10:01:12.980591'), (298486374, 'MyString', 'MyString', 'MyString', 'MyString', '2023-05-22 10:01:12.980591', '2023-05-22 10:01:12.980591');
+INSERT INTO "values" ("id", "user_id", "image_id", "value", "created_at", "updated_at") VALUES (980190962, 1, 1, 1, '2023-05-22 10:01:12.982786', '2023-05-22 10:01:12.982786'), (298486374, 1, 1, 1, '2023-05-22 10:01:12.982786', '2023-05-22 10:01:12.982786')[0m
+  [1m[36mTRANSACTION (1.6ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.3ms)[0m  [1m[35mALTER TABLE "images" ENABLE TRIGGER ALL;ALTER TABLE "themes" ENABLE TRIGGER ALL;ALTER TABLE "users" ENABLE TRIGGER ALL;ALTER TABLE "values" ENABLE TRIGGER ALL;ALTER TABLE "schema_migrations" ENABLE TRIGGER ALL;ALTER TABLE "ar_internal_metadata" ENABLE TRIGGER ALL[0m
+  [1m[36mTRANSACTION (1.1ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (5.7ms)[0m  [1m[35mdo $$
+  declare r record;
+BEGIN
+FOR r IN (
+  SELECT FORMAT(
+    'UPDATE pg_constraint SET convalidated=false WHERE conname = ''%I'' AND connamespace::regnamespace = ''%I''::regnamespace; ALTER TABLE %I.%I VALIDATE CONSTRAINT %I;',
+    constraint_name,
+    table_schema,
+    table_schema,
+    table_name,
+    constraint_name
+  ) AS constraint_check
+  FROM information_schema.table_constraints WHERE constraint_type = 'FOREIGN KEY'
+)
+  LOOP
+    EXECUTE (r.constraint_check);
+  END LOOP;
+END;
+$$;
+[0m
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[35mBEGIN[0m
+----------------------------------------------------------
+WorkControllerTest: test_should_get__choose_theme_from_arr
+----------------------------------------------------------
+Started GET "/work/_choose_theme_from_arr" for 127.0.0.1 at 2023-05-22 13:01:13 +0300
+Processing by WorkController#_choose_theme_from_arr as HTML
+  Rendering layout layouts/application.html.haml
+  Rendering work/_choose_theme_from_arr.html.haml within layouts/application
+  Rendered work/_choose_theme_from_arr.html.haml within layouts/application (Duration: 76.9ms | Allocations: 11443)
+  Rendered layout layouts/application.html.haml (Duration: 77.1ms | Allocations: 11499)
+Completed 500 Internal Server Error in 87ms (ActiveRecord: 0.0ms | Allocations: 14223)
+
+NoMethodError - undefined method `map' for nil:NilClass:
+  app/views/work/_choose_theme_from_arr.html.haml:3
+  app/views/work/_choose_theme_from_arr.html.haml:2
+  test/controllers/work_controller_test.rb:5:in `block in <class:WorkControllerTest>'
+
+  [1m[36mTRANSACTION (0.6ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mBEGIN[0m
+-----------------------------------------------
+ImagesControllerTest: test_should_destroy_image
+-----------------------------------------------
+  [1m[36mImage Load (0.5ms)[0m  [1m[34mSELECT "images".* FROM "images" WHERE "images"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+  [1m[36mImage Count (0.7ms)[0m  [1m[34mSELECT COUNT(*) FROM "images"[0m
+Started DELETE "/images/980190962" for 127.0.0.1 at 2023-05-22 13:01:13 +0300
+Processing by ImagesController#destroy as HTML
+  Parameters: {"id"=>"980190962"}
+  [1m[36mImage Load (0.6ms)[0m  [1m[34mSELECT "images".* FROM "images" WHERE "images"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (1.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mImage Destroy (0.6ms)[0m  [1m[31mDELETE FROM "images" WHERE "images"."id" = $1[0m  [["id", 980190962]]
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Redirected to http://www.example.com/images
+Completed 302 Found in 6ms (ActiveRecord: 2.6ms | Allocations: 2168)
+  [1m[36mImage Count (0.4ms)[0m  [1m[34mSELECT COUNT(*) FROM "images"[0m
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mBEGIN[0m
+------------------------------------------
+ImagesControllerTest: test_should_get_edit
+------------------------------------------
+  [1m[36mImage Load (0.4ms)[0m  [1m[34mSELECT "images".* FROM "images" WHERE "images"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+Started GET "/images/980190962/edit" for 127.0.0.1 at 2023-05-22 13:01:13 +0300
+Processing by ImagesController#edit as HTML
+  Parameters: {"id"=>"980190962"}
+  [1m[36mImage Load (0.4ms)[0m  [1m[34mSELECT "images".* FROM "images" WHERE "images"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+  Rendering layout layouts/application.html.haml
+  Rendering images/edit.html.haml within layouts/application
+  Rendered images/_form.html.haml (Duration: 102.3ms | Allocations: 11399)
+  Rendered images/edit.html.haml within layouts/application (Duration: 111.2ms | Allocations: 15019)
+  Rendered shared/_header.html.haml (Duration: 8.7ms | Allocations: 5370)
+  Rendered shared/_footer.html.haml (Duration: 5.7ms | Allocations: 3999)
+  Rendered layout layouts/application.html.haml (Duration: 5050.9ms | Allocations: 3403287)
+Completed 200 OK in 5054ms (Views: 5052.5ms | ActiveRecord: 0.4ms | Allocations: 3404094)
+  [1m[36mTRANSACTION (0.7ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.7ms)[0m  [1m[35mBEGIN[0m
+-------------------------------------------
+ImagesControllerTest: test_should_get_index
+-------------------------------------------
+  [1m[36mImage Load (0.5ms)[0m  [1m[34mSELECT "images".* FROM "images" WHERE "images"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+Started GET "/images" for 127.0.0.1 at 2023-05-22 13:01:18 +0300
+Processing by ImagesController#index as HTML
+  Rendering layout layouts/application.html.haml
+  Rendering images/index.html.haml within layouts/application
+  [1m[36mImage Load (0.7ms)[0m  [1m[34mSELECT "images".* FROM "images"[0m
+  Rendered images/index.html.haml within layouts/application (Duration: 14.1ms | Allocations: 8428)
+  Rendered shared/_header.html.haml (Duration: 0.1ms | Allocations: 118)
+  Rendered shared/_footer.html.haml (Duration: 0.1ms | Allocations: 61)
+  Rendered layout layouts/application.html.haml (Duration: 15.3ms | Allocations: 9818)
+Completed 200 OK in 16ms (Views: 14.9ms | ActiveRecord: 0.7ms | Allocations: 10205)
+  [1m[36mTRANSACTION (1.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (1.8ms)[0m  [1m[35mBEGIN[0m
+-----------------------------------------
+ImagesControllerTest: test_should_get_new
+-----------------------------------------
+  [1m[36mImage Load (6.9ms)[0m  [1m[34mSELECT "images".* FROM "images" WHERE "images"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+Started GET "/images/new" for 127.0.0.1 at 2023-05-22 13:01:18 +0300
+Processing by ImagesController#new as HTML
+  Rendering layout layouts/application.html.haml
+  Rendering images/new.html.haml within layouts/application
+  Rendered images/_form.html.haml (Duration: 1.0ms | Allocations: 1016)
+  Rendered images/new.html.haml within layouts/application (Duration: 15.6ms | Allocations: 4101)
+  Rendered shared/_header.html.haml (Duration: 0.1ms | Allocations: 117)
+  Rendered shared/_footer.html.haml (Duration: 0.1ms | Allocations: 61)
+  Rendered layout layouts/application.html.haml (Duration: 18.7ms | Allocations: 5490)
+Completed 200 OK in 21ms (Views: 19.0ms | ActiveRecord: 0.0ms | Allocations: 5882)
+  [1m[36mTRANSACTION (8.3ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (1.5ms)[0m  [1m[35mBEGIN[0m
+----------------------------------------------
+ImagesControllerTest: test_should_update_image
+----------------------------------------------
+  [1m[36mImage Load (3.3ms)[0m  [1m[34mSELECT "images".* FROM "images" WHERE "images"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+Started PATCH "/images/980190962" for 127.0.0.1 at 2023-05-22 13:01:18 +0300
+Processing by ImagesController#update as HTML
+  Parameters: {"image"=>{"ave_value"=>"1.5", "file"=>"MyString", "name"=>"MyString", "theme_id"=>"1"}, "id"=>"980190962"}
+  [1m[36mImage Load (13.8ms)[0m  [1m[34mSELECT "images".* FROM "images" WHERE "images"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.7ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTheme Load (0.4ms)[0m  [1m[34mSELECT "themes".* FROM "themes" WHERE "themes"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[31mROLLBACK TO SAVEPOINT active_record_1[0m
+  Rendering layout layouts/application.html.haml
+  Rendering images/edit.html.haml within layouts/application
+  Rendered images/_form.html.haml (Duration: 1.6ms | Allocations: 1551)
+  Rendered images/edit.html.haml within layouts/application (Duration: 1.9ms | Allocations: 1655)
+  Rendered shared/_header.html.haml (Duration: 0.1ms | Allocations: 117)
+  Rendered shared/_footer.html.haml (Duration: 0.1ms | Allocations: 61)
+  Rendered layout layouts/application.html.haml (Duration: 3.1ms | Allocations: 3036)
+Completed 422 Unprocessable Entity in 127ms (Views: 3.5ms | ActiveRecord: 15.3ms | Allocations: 9063)
+  [1m[36mTRANSACTION (0.8ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[35mBEGIN[0m
+----------------------------------------------
+ImagesControllerTest: test_should_create_image
+----------------------------------------------
+  [1m[36mImage Load (0.4ms)[0m  [1m[34mSELECT "images".* FROM "images" WHERE "images"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+  [1m[36mImage Count (0.6ms)[0m  [1m[34mSELECT COUNT(*) FROM "images"[0m
+Started POST "/images" for 127.0.0.1 at 2023-05-22 13:01:18 +0300
+Processing by ImagesController#create as HTML
+  Parameters: {"image"=>{"ave_value"=>"1.5", "file"=>"MyString", "name"=>"MyString", "theme_id"=>"1"}}
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTheme Load (1.0ms)[0m  [1m[34mSELECT "themes".* FROM "themes" WHERE "themes"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[31mROLLBACK TO SAVEPOINT active_record_1[0m
+  Rendering layout layouts/application.html.haml
+  Rendering images/new.html.haml within layouts/application
+  Rendered images/_form.html.haml (Duration: 1.1ms | Allocations: 1353)
+  Rendered images/new.html.haml within layouts/application (Duration: 1.2ms | Allocations: 1420)
+  Rendered shared/_header.html.haml (Duration: 0.1ms | Allocations: 117)
+  Rendered shared/_footer.html.haml (Duration: 0.1ms | Allocations: 61)
+  Rendered layout layouts/application.html.haml (Duration: 2.6ms | Allocations: 2801)
+Completed 422 Unprocessable Entity in 7ms (Views: 2.9ms | ActiveRecord: 1.8ms | Allocations: 4358)
+  [1m[36mImage Count (1.5ms)[0m  [1m[34mSELECT COUNT(*) FROM "images"[0m
+  [1m[36mTRANSACTION (8.3ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (1.3ms)[0m  [1m[35mBEGIN[0m
+--------------------------------------------
+ImagesControllerTest: test_should_show_image
+--------------------------------------------
+  [1m[36mImage Load (5.8ms)[0m  [1m[34mSELECT "images".* FROM "images" WHERE "images"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+Started GET "/images/980190962" for 127.0.0.1 at 2023-05-22 13:01:19 +0300
+Processing by ImagesController#show as HTML
+  Parameters: {"id"=>"980190962"}
+  [1m[36mImage Load (5.5ms)[0m  [1m[34mSELECT "images".* FROM "images" WHERE "images"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+  Rendering layout layouts/application.html.haml
+  Rendering images/show.html.haml within layouts/application
+  Rendered images/show.html.haml within layouts/application (Duration: 79.6ms | Allocations: 5833)
+  Rendered shared/_header.html.haml (Duration: 0.1ms | Allocations: 118)
+  Rendered shared/_footer.html.haml (Duration: 0.1ms | Allocations: 61)
+  Rendered layout layouts/application.html.haml (Duration: 88.8ms | Allocations: 7215)
+Completed 200 OK in 96ms (Views: 89.1ms | ActiveRecord: 5.5ms | Allocations: 7709)
+  [1m[36mTRANSACTION (1.3ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (15.0ms)[0m  [1m[35mBEGIN[0m
+-----------------------------------------------
+ThemesControllerTest: test_should_destroy_theme
+-----------------------------------------------
+  [1m[36mTheme Load (1.0ms)[0m  [1m[34mSELECT "themes".* FROM "themes" WHERE "themes"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+  [1m[36mTheme Count (0.9ms)[0m  [1m[34mSELECT COUNT(*) FROM "themes"[0m
+Started DELETE "/themes/980190962" for 127.0.0.1 at 2023-05-22 13:01:19 +0300
+Processing by ThemesController#destroy as HTML
+  Parameters: {"id"=>"980190962"}
+  [1m[36mTheme Load (0.5ms)[0m  [1m[34mSELECT "themes".* FROM "themes" WHERE "themes"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTheme Destroy (0.5ms)[0m  [1m[31mDELETE FROM "themes" WHERE "themes"."id" = $1[0m  [["id", 980190962]]
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Redirected to http://www.example.com/themes
+Completed 302 Found in 5ms (ActiveRecord: 1.6ms | Allocations: 1740)
+  [1m[36mTheme Count (0.5ms)[0m  [1m[34mSELECT COUNT(*) FROM "themes"[0m
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mBEGIN[0m
+------------------------------------------
+ThemesControllerTest: test_should_get_edit
+------------------------------------------
+  [1m[36mTheme Load (0.4ms)[0m  [1m[34mSELECT "themes".* FROM "themes" WHERE "themes"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+Started GET "/themes/980190962/edit" for 127.0.0.1 at 2023-05-22 13:01:19 +0300
+Processing by ThemesController#edit as HTML
+  Parameters: {"id"=>"980190962"}
+  [1m[36mTheme Load (0.8ms)[0m  [1m[34mSELECT "themes".* FROM "themes" WHERE "themes"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+  Rendering layout layouts/application.html.haml
+  Rendering themes/edit.html.haml within layouts/application
+  Rendered themes/_form.html.haml (Duration: 66.3ms | Allocations: 7543)
+  Rendered themes/edit.html.haml within layouts/application (Duration: 77.8ms | Allocations: 11094)
+  Rendered shared/_header.html.haml (Duration: 0.1ms | Allocations: 126)
+  Rendered shared/_footer.html.haml (Duration: 0.1ms | Allocations: 62)
+  Rendered layout layouts/application.html.haml (Duration: 91.2ms | Allocations: 12541)
+Completed 200 OK in 94ms (Views: 92.5ms | ActiveRecord: 0.8ms | Allocations: 13324)
+  [1m[36mTRANSACTION (7.5ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.6ms)[0m  [1m[35mBEGIN[0m
+-------------------------------------------
+ThemesControllerTest: test_should_get_index
+-------------------------------------------
+  [1m[36mTheme Load (0.5ms)[0m  [1m[34mSELECT "themes".* FROM "themes" WHERE "themes"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+Started GET "/themes" for 127.0.0.1 at 2023-05-22 13:01:19 +0300
+Processing by ThemesController#index as HTML
+  Rendering layout layouts/application.html.haml
+  Rendering themes/index.html.haml within layouts/application
+  [1m[36mTheme Load (2.1ms)[0m  [1m[34mSELECT "themes".* FROM "themes"[0m
+  Rendered themes/index.html.haml within layouts/application (Duration: 10.6ms | Allocations: 7374)
+  Rendered shared/_header.html.haml (Duration: 0.1ms | Allocations: 118)
+  Rendered shared/_footer.html.haml (Duration: 0.1ms | Allocations: 61)
+  Rendered layout layouts/application.html.haml (Duration: 11.7ms | Allocations: 8764)
+Completed 200 OK in 12ms (Views: 9.9ms | ActiveRecord: 2.1ms | Allocations: 9151)
+  [1m[36mTRANSACTION (3.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (3.6ms)[0m  [1m[35mBEGIN[0m
+-----------------------------------------
+ThemesControllerTest: test_should_get_new
+-----------------------------------------
+  [1m[36mTheme Load (2.0ms)[0m  [1m[34mSELECT "themes".* FROM "themes" WHERE "themes"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+Started GET "/themes/new" for 127.0.0.1 at 2023-05-22 13:01:19 +0300
+Processing by ThemesController#new as HTML
+  Rendering layout layouts/application.html.haml
+  Rendering themes/new.html.haml within layouts/application
+  Rendered themes/_form.html.haml (Duration: 3.0ms | Allocations: 606)
+  Rendered themes/new.html.haml within layouts/application (Duration: 56.4ms | Allocations: 3691)
+  Rendered shared/_header.html.haml (Duration: 0.1ms | Allocations: 117)
+  Rendered shared/_footer.html.haml (Duration: 0.1ms | Allocations: 61)
+  Rendered layout layouts/application.html.haml (Duration: 57.6ms | Allocations: 5080)
+Completed 200 OK in 58ms (Views: 57.8ms | ActiveRecord: 0.0ms | Allocations: 5451)
+  [1m[36mTRANSACTION (17.9ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (4.9ms)[0m  [1m[35mBEGIN[0m
+----------------------------------------------
+ThemesControllerTest: test_should_update_theme
+----------------------------------------------
+  [1m[36mTheme Load (4.5ms)[0m  [1m[34mSELECT "themes".* FROM "themes" WHERE "themes"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+Started PATCH "/themes/980190962" for 127.0.0.1 at 2023-05-22 13:01:19 +0300
+Processing by ThemesController#update as HTML
+  Parameters: {"theme"=>{"name"=>"MyString", "qty_items"=>"1"}, "id"=>"980190962"}
+  [1m[36mTheme Load (13.8ms)[0m  [1m[34mSELECT "themes".* FROM "themes" WHERE "themes"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+Redirected to http://www.example.com/themes/980190962
+Completed 302 Found in 20ms (ActiveRecord: 13.8ms | Allocations: 815)
+  [1m[36mTRANSACTION (8.3ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (3.9ms)[0m  [1m[35mBEGIN[0m
+----------------------------------------------
+ThemesControllerTest: test_should_create_theme
+----------------------------------------------
+  [1m[36mTheme Load (0.7ms)[0m  [1m[34mSELECT "themes".* FROM "themes" WHERE "themes"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+  [1m[36mTheme Count (2.5ms)[0m  [1m[34mSELECT COUNT(*) FROM "themes"[0m
+Started POST "/themes" for 127.0.0.1 at 2023-05-22 13:01:19 +0300
+Processing by ThemesController#create as HTML
+  Parameters: {"theme"=>{"name"=>"MyString", "qty_items"=>"1"}}
+  [1m[36mTRANSACTION (8.2ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTheme Create (4.8ms)[0m  [1m[32mINSERT INTO "themes" ("name", "qty_items", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["name", "MyString"], ["qty_items", 1], ["created_at", "2023-05-22 10:01:19.634239"], ["updated_at", "2023-05-22 10:01:19.634239"]]
+  [1m[36mTRANSACTION (5.4ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Redirected to http://www.example.com/themes/980190963
+Completed 302 Found in 23ms (ActiveRecord: 18.4ms | Allocations: 1928)
+  [1m[36mTheme Count (6.8ms)[0m  [1m[34mSELECT COUNT(*) FROM "themes"[0m
+  [1m[36mTheme Load (4.1ms)[0m  [1m[34mSELECT "themes".* FROM "themes" ORDER BY "themes"."id" DESC LIMIT $1[0m  [["LIMIT", 1]]
+  [1m[36mTRANSACTION (1.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (5.2ms)[0m  [1m[35mBEGIN[0m
+--------------------------------------------
+ThemesControllerTest: test_should_show_theme
+--------------------------------------------
+  [1m[36mTheme Load (1.3ms)[0m  [1m[34mSELECT "themes".* FROM "themes" WHERE "themes"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+Started GET "/themes/980190962" for 127.0.0.1 at 2023-05-22 13:01:19 +0300
+Processing by ThemesController#show as HTML
+  Parameters: {"id"=>"980190962"}
+  [1m[36mTheme Load (1.4ms)[0m  [1m[34mSELECT "themes".* FROM "themes" WHERE "themes"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+  Rendering layout layouts/application.html.haml
+  Rendering themes/show.html.haml within layouts/application
+  Rendered themes/show.html.haml within layouts/application (Duration: 93.6ms | Allocations: 4649)
+  Rendered shared/_header.html.haml (Duration: 0.1ms | Allocations: 118)
+  Rendered shared/_footer.html.haml (Duration: 0.1ms | Allocations: 61)
+  Rendered layout layouts/application.html.haml (Duration: 98.2ms | Allocations: 6031)
+Completed 200 OK in 105ms (Views: 98.6ms | ActiveRecord: 1.4ms | Allocations: 6520)
+  [1m[36mTRANSACTION (3.5ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (11.4ms)[0m  [1m[35mBEGIN[0m
+---------------------------------------------
+UsersControllerTest: test_should_destroy_user
+---------------------------------------------
+  [1m[36mUser Load (12.6ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+  [1m[36mUser Count (10.3ms)[0m  [1m[34mSELECT COUNT(*) FROM "users"[0m
+Started DELETE "/users/980190962" for 127.0.0.1 at 2023-05-22 13:01:19 +0300
+Processing by UsersController#destroy as HTML
+  Parameters: {"id"=>"980190962"}
+  [1m[36mUser Load (0.7ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mValue Load (0.4ms)[0m  [1m[34mSELECT "values".* FROM "values" WHERE "values"."user_id" = $1[0m  [["user_id", 980190962]]
+  [1m[36mUser Destroy (0.5ms)[0m  [1m[31mDELETE FROM "users" WHERE "users"."id" = $1[0m  [["id", 980190962]]
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Redirected to http://www.example.com/users
+Completed 302 Found in 10ms (ActiveRecord: 2.2ms | Allocations: 4867)
+  [1m[36mUser Count (0.4ms)[0m  [1m[34mSELECT COUNT(*) FROM "users"[0m
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mBEGIN[0m
+-----------------------------------------
+UsersControllerTest: test_should_get_edit
+-----------------------------------------
+  [1m[36mUser Load (0.4ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+Started GET "/users/980190962/edit" for 127.0.0.1 at 2023-05-22 13:01:20 +0300
+Processing by UsersController#edit as HTML
+  Parameters: {"id"=>"980190962"}
+  [1m[36mUser Load (0.4ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+  Rendering layout layouts/application.html.haml
+  Rendering users/edit.html.haml within layouts/application
+  Rendered users/_form.html.haml (Duration: 62.2ms | Allocations: 9748)
+  Rendered users/edit.html.haml within layouts/application (Duration: 69.1ms | Allocations: 13299)
+  Rendered shared/_header.html.haml (Duration: 0.1ms | Allocations: 126)
+  Rendered shared/_footer.html.haml (Duration: 0.1ms | Allocations: 62)
+  Rendered layout layouts/application.html.haml (Duration: 70.5ms | Allocations: 14746)
+Completed 200 OK in 73ms (Views: 71.6ms | ActiveRecord: 0.4ms | Allocations: 15536)
+  [1m[36mTRANSACTION (3.9ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (4.4ms)[0m  [1m[35mBEGIN[0m
+------------------------------------------
+UsersControllerTest: test_should_get_index
+------------------------------------------
+  [1m[36mUser Load (12.2ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+Started GET "/users" for 127.0.0.1 at 2023-05-22 13:01:20 +0300
+Processing by UsersController#index as HTML
+  Rendering layout layouts/application.html.haml
+  Rendering users/index.html.haml within layouts/application
+  [1m[36mUser Load (11.7ms)[0m  [1m[34mSELECT "users".* FROM "users"[0m
+  Rendered users/index.html.haml within layouts/application (Duration: 58.2ms | Allocations: 8405)
+  Rendered shared/_header.html.haml (Duration: 0.1ms | Allocations: 118)
+  Rendered shared/_footer.html.haml (Duration: 0.1ms | Allocations: 61)
+  Rendered layout layouts/application.html.haml (Duration: 63.1ms | Allocations: 9795)
+Completed 200 OK in 64ms (Views: 51.6ms | ActiveRecord: 11.7ms | Allocations: 10182)
+  [1m[36mTRANSACTION (10.9ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (4.0ms)[0m  [1m[35mBEGIN[0m
+----------------------------------------
+UsersControllerTest: test_should_get_new
+----------------------------------------
+  [1m[36mUser Load (1.2ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+Started GET "/users/new" for 127.0.0.1 at 2023-05-22 13:01:20 +0300
+Processing by UsersController#new as HTML
+  Rendering layout layouts/application.html.haml
+  Rendering users/new.html.haml within layouts/application
+  Rendered users/_form.html.haml (Duration: 1.0ms | Allocations: 1009)
+  Rendered users/new.html.haml within layouts/application (Duration: 47.9ms | Allocations: 4094)
+  Rendered shared/_header.html.haml (Duration: 0.2ms | Allocations: 117)
+  Rendered shared/_footer.html.haml (Duration: 0.1ms | Allocations: 61)
+  Rendered layout layouts/application.html.haml (Duration: 51.8ms | Allocations: 5483)
+Completed 200 OK in 55ms (Views: 52.1ms | ActiveRecord: 0.0ms | Allocations: 5857)
+  [1m[36mTRANSACTION (0.5ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[35mBEGIN[0m
+--------------------------------------------
+UsersControllerTest: test_should_update_user
+--------------------------------------------
+  [1m[36mUser Load (0.5ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+Started PATCH "/users/980190962" for 127.0.0.1 at 2023-05-22 13:01:20 +0300
+Processing by UsersController#update as HTML
+  Parameters: {"user"=>{"email"=>"MyString", "name"=>"MyString", "password"=>"[FILTERED]", "password_confirmation"=>"[FILTERED]"}, "id"=>"980190962"}
+  [1m[36mUser Load (0.4ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+Redirected to http://www.example.com/users/980190962
+Completed 302 Found in 2ms (ActiveRecord: 0.4ms | Allocations: 691)
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[35mBEGIN[0m
+--------------------------------------------
+UsersControllerTest: test_should_create_user
+--------------------------------------------
+  [1m[36mUser Load (0.5ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+  [1m[36mUser Count (1.2ms)[0m  [1m[34mSELECT COUNT(*) FROM "users"[0m
+Started POST "/users" for 127.0.0.1 at 2023-05-22 13:01:20 +0300
+Processing by UsersController#create as HTML
+  Parameters: {"user"=>{"email"=>"MyString", "name"=>"MyString", "password"=>"[FILTERED]", "password_confirmation"=>"[FILTERED]"}}
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Create (2.6ms)[0m  [1m[32mINSERT INTO "users" ("name", "email", "password", "password_confirmation", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["name", "MyString"], ["email", "MyString"], ["password", "MyString"], ["password_confirmation", "MyString"], ["created_at", "2023-05-22 10:01:20.323589"], ["updated_at", "2023-05-22 10:01:20.323589"]]
+  [1m[36mTRANSACTION (1.4ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Redirected to http://www.example.com/users/980190963
+Completed 302 Found in 8ms (ActiveRecord: 4.4ms | Allocations: 761)
+  [1m[36mUser Count (1.8ms)[0m  [1m[34mSELECT COUNT(*) FROM "users"[0m
+  [1m[36mUser Load (4.3ms)[0m  [1m[34mSELECT "users".* FROM "users" ORDER BY "users"."id" DESC LIMIT $1[0m  [["LIMIT", 1]]
+  [1m[36mTRANSACTION (10.6ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (4.9ms)[0m  [1m[35mBEGIN[0m
+------------------------------------------
+UsersControllerTest: test_should_show_user
+------------------------------------------
+  [1m[36mUser Load (6.4ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+Started GET "/users/980190962" for 127.0.0.1 at 2023-05-22 13:01:20 +0300
+Processing by UsersController#show as HTML
+  Parameters: {"id"=>"980190962"}
+  [1m[36mUser Load (2.5ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+  Rendering layout layouts/application.html.haml
+  Rendering users/show.html.haml within layouts/application
+  Rendered users/show.html.haml within layouts/application (Duration: 31.1ms | Allocations: 5822)
+  Rendered shared/_header.html.haml (Duration: 0.1ms | Allocations: 118)
+  Rendered shared/_footer.html.haml (Duration: 0.1ms | Allocations: 61)
+  Rendered layout layouts/application.html.haml (Duration: 40.0ms | Allocations: 7204)
+Completed 200 OK in 45ms (Views: 40.3ms | ActiveRecord: 2.5ms | Allocations: 7700)
+  [1m[36mTRANSACTION (14.6ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (21.6ms)[0m  [1m[35mBEGIN[0m
+---------------------------------------------
+SharedControllerTest: test_should_get__footer
+---------------------------------------------
+Started GET "/shared/_footer" for 127.0.0.1 at 2023-05-22 13:01:20 +0300
+Processing by SharedController#_footer as HTML
+  Rendering layout layouts/application.html.haml
+  Rendering shared/_footer.html.haml within layouts/application
+  Rendered shared/_footer.html.haml within layouts/application (Duration: 0.2ms | Allocations: 94)
+  Rendered shared/_header.html.haml (Duration: 0.1ms | Allocations: 124)
+  Rendered shared/_footer.html.haml (Duration: 0.1ms | Allocations: 61)
+  Rendered layout layouts/application.html.haml (Duration: 2.7ms | Allocations: 1551)
+Completed 200 OK in 15ms (Views: 14.8ms | ActiveRecord: 0.0ms | Allocations: 2194)
+  [1m[36mTRANSACTION (5.5ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN[0m
+---------------------------------------------
+SharedControllerTest: test_should_get__header
+---------------------------------------------
+Started GET "/shared/_header" for 127.0.0.1 at 2023-05-22 13:01:20 +0300
+Processing by SharedController#_header as HTML
+  Rendering layout layouts/application.html.haml
+  Rendering shared/_header.html.haml within layouts/application
+  Rendered shared/_header.html.haml within layouts/application (Duration: 0.2ms | Allocations: 121)
+  Rendered shared/_header.html.haml (Duration: 0.1ms | Allocations: 118)
+  Rendered shared/_footer.html.haml (Duration: 0.1ms | Allocations: 61)
+  Rendered layout layouts/application.html.haml (Duration: 4.0ms | Allocations: 1511)
+Completed 200 OK in 8ms (Views: 7.8ms | ActiveRecord: 0.0ms | Allocations: 1802)
+  [1m[36mTRANSACTION (4.0ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (12.4ms)[0m  [1m[35mBEGIN[0m
+-----------------------------------------
+MainControllerTest: test_should_get_index
+-----------------------------------------
+Started GET "/main/index" for 127.0.0.1 at 2023-05-22 13:01:20 +0300
+Processing by MainController#index as HTML
+  Rendering layout layouts/application.html.haml
+  Rendering main/index.html.haml within layouts/application
+  Rendered main/index.html.haml within layouts/application (Duration: 45.7ms | Allocations: 2549)
+  Rendered shared/_header.html.haml (Duration: 0.2ms | Allocations: 151)
+  Rendered shared/_footer.html.haml (Duration: 0.1ms | Allocations: 62)
+  Rendered layout layouts/application.html.haml (Duration: 54.5ms | Allocations: 4038)
+Completed 200 OK in 82ms (Views: 79.6ms | ActiveRecord: 0.0ms | Allocations: 4737)
+  [1m[36mTRANSACTION (5.8ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mBEGIN[0m
+----------------------------------------
+MainControllerTest: test_should_get_help
+----------------------------------------
+Started GET "/main/help" for 127.0.0.1 at 2023-05-22 13:01:20 +0300
+Processing by MainController#help as HTML
+  Rendering layout layouts/application.html.haml
+  Rendering main/help.html.haml within layouts/application
+  Rendered main/help.html.haml within layouts/application (Duration: 4.2ms | Allocations: 2542)
+  Rendered shared/_header.html.haml (Duration: 0.1ms | Allocations: 122)
+  Rendered shared/_footer.html.haml (Duration: 0.1ms | Allocations: 61)
+  Rendered layout layouts/application.html.haml (Duration: 5.2ms | Allocations: 3937)
+Completed 200 OK in 6ms (Views: 5.6ms | ActiveRecord: 0.0ms | Allocations: 4284)
+  [1m[36mTRANSACTION (7.0ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (1.7ms)[0m  [1m[35mBEGIN[0m
+-----------------------------------------
+MainControllerTest: test_should_get_about
+-----------------------------------------
+Started GET "/main/about" for 127.0.0.1 at 2023-05-22 13:01:20 +0300
+Processing by MainController#about as HTML
+  Rendering layout layouts/application.html.haml
+  Rendering main/about.html.haml within layouts/application
+  Rendered main/about.html.haml within layouts/application (Duration: 61.8ms | Allocations: 2542)
+  Rendered shared/_header.html.haml (Duration: 0.2ms | Allocations: 122)
+  Rendered shared/_footer.html.haml (Duration: 0.1ms | Allocations: 61)
+  Rendered layout layouts/application.html.haml (Duration: 64.8ms | Allocations: 3937)
+Completed 200 OK in 66ms (Views: 65.1ms | ActiveRecord: 0.0ms | Allocations: 4284)
+  [1m[36mTRANSACTION (8.9ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (15.5ms)[0m  [1m[35mBEGIN[0m
+--------------------------------------------
+MainControllerTest: test_should_get_contacts
+--------------------------------------------
+Started GET "/main/contacts" for 127.0.0.1 at 2023-05-22 13:01:20 +0300
+Processing by MainController#contacts as HTML
+  Rendering layout layouts/application.html.haml
+  Rendering main/contacts.html.haml within layouts/application
+  Rendered main/contacts.html.haml within layouts/application (Duration: 86.4ms | Allocations: 2542)
+  Rendered shared/_header.html.haml (Duration: 0.1ms | Allocations: 122)
+  Rendered shared/_footer.html.haml (Duration: 0.1ms | Allocations: 61)
+  Rendered layout layouts/application.html.haml (Duration: 101.7ms | Allocations: 3937)
+Completed 200 OK in 112ms (Views: 109.0ms | ActiveRecord: 0.0ms | Allocations: 4284)
+  [1m[36mTRANSACTION (15.6ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[35mBEGIN[0m
+-----------------------------------------------
+ValuesControllerTest: test_should_destroy_value
+-----------------------------------------------
+  [1m[36mValue Load (0.5ms)[0m  [1m[34mSELECT "values".* FROM "values" WHERE "values"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+  [1m[36mValue Count (0.5ms)[0m  [1m[34mSELECT COUNT(*) FROM "values"[0m
+Started DELETE "/values/980190962" for 127.0.0.1 at 2023-05-22 13:01:21 +0300
+Processing by ValuesController#destroy as HTML
+  Parameters: {"id"=>"980190962"}
+  [1m[36mValue Load (2.7ms)[0m  [1m[34mSELECT "values".* FROM "values" WHERE "values"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (3.5ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mValue Destroy (3.7ms)[0m  [1m[31mDELETE FROM "values" WHERE "values"."id" = $1[0m  [["id", 980190962]]
+  [1m[36mTRANSACTION (2.2ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Redirected to http://www.example.com/values
+Completed 302 Found in 16ms (ActiveRecord: 12.1ms | Allocations: 1741)
+  [1m[36mValue Count (7.4ms)[0m  [1m[34mSELECT COUNT(*) FROM "values"[0m
+  [1m[36mTRANSACTION (6.0ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (5.3ms)[0m  [1m[35mBEGIN[0m
+------------------------------------------
+ValuesControllerTest: test_should_get_edit
+------------------------------------------
+  [1m[36mValue Load (4.7ms)[0m  [1m[34mSELECT "values".* FROM "values" WHERE "values"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+Started GET "/values/980190962/edit" for 127.0.0.1 at 2023-05-22 13:01:21 +0300
+Processing by ValuesController#edit as HTML
+  Parameters: {"id"=>"980190962"}
+  [1m[36mValue Load (0.7ms)[0m  [1m[34mSELECT "values".* FROM "values" WHERE "values"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+  Rendering layout layouts/application.html.haml
+  Rendering values/edit.html.haml within layouts/application
+  Rendered values/_form.html.haml (Duration: 44.2ms | Allocations: 8647)
+  Rendered values/edit.html.haml within layouts/application (Duration: 90.1ms | Allocations: 12198)
+  Rendered shared/_header.html.haml (Duration: 0.1ms | Allocations: 126)
+  Rendered shared/_footer.html.haml (Duration: 0.1ms | Allocations: 62)
+  Rendered layout layouts/application.html.haml (Duration: 91.5ms | Allocations: 13645)
+Completed 200 OK in 113ms (Views: 111.5ms | ActiveRecord: 0.7ms | Allocations: 14429)
+  [1m[36mTRANSACTION (0.5ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mBEGIN[0m
+-------------------------------------------
+ValuesControllerTest: test_should_get_index
+-------------------------------------------
+  [1m[36mValue Load (0.6ms)[0m  [1m[34mSELECT "values".* FROM "values" WHERE "values"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+Started GET "/values" for 127.0.0.1 at 2023-05-22 13:01:21 +0300
+Processing by ValuesController#index as HTML
+  Rendering layout layouts/application.html.haml
+  Rendering values/index.html.haml within layouts/application
+  [1m[36mValue Load (0.5ms)[0m  [1m[34mSELECT "values".* FROM "values"[0m
+  Rendered values/index.html.haml within layouts/application (Duration: 7.1ms | Allocations: 7881)
+  Rendered shared/_header.html.haml (Duration: 0.1ms | Allocations: 118)
+  Rendered shared/_footer.html.haml (Duration: 0.1ms | Allocations: 61)
+  Rendered layout layouts/application.html.haml (Duration: 12.5ms | Allocations: 9271)
+Completed 200 OK in 13ms (Views: 12.4ms | ActiveRecord: 0.5ms | Allocations: 9658)
+  [1m[36mTRANSACTION (3.0ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (1.4ms)[0m  [1m[35mBEGIN[0m
+-----------------------------------------
+ValuesControllerTest: test_should_get_new
+-----------------------------------------
+  [1m[36mValue Load (10.1ms)[0m  [1m[34mSELECT "values".* FROM "values" WHERE "values"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+Started GET "/values/new" for 127.0.0.1 at 2023-05-22 13:01:21 +0300
+Processing by ValuesController#new as HTML
+  Rendering layout layouts/application.html.haml
+  Rendering values/new.html.haml within layouts/application
+  Rendered values/_form.html.haml (Duration: 1.0ms | Allocations: 805)
+  Rendered values/new.html.haml within layouts/application (Duration: 54.3ms | Allocations: 3890)
+  Rendered shared/_header.html.haml (Duration: 1.6ms | Allocations: 117)
+  Rendered shared/_footer.html.haml (Duration: 0.1ms | Allocations: 61)
+  Rendered layout layouts/application.html.haml (Duration: 60.7ms | Allocations: 5279)
+Completed 200 OK in 61ms (Views: 60.9ms | ActiveRecord: 0.0ms | Allocations: 5651)
+  [1m[36mTRANSACTION (8.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (1.7ms)[0m  [1m[35mBEGIN[0m
+----------------------------------------------
+ValuesControllerTest: test_should_update_value
+----------------------------------------------
+  [1m[36mValue Load (4.1ms)[0m  [1m[34mSELECT "values".* FROM "values" WHERE "values"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+Started PATCH "/values/980190962" for 127.0.0.1 at 2023-05-22 13:01:21 +0300
+Processing by ValuesController#update as HTML
+  Parameters: {"value"=>{"image_id"=>"1", "user_id"=>"1", "value"=>"1"}, "id"=>"980190962"}
+  [1m[36mValue Load (17.1ms)[0m  [1m[34mSELECT "values".* FROM "values" WHERE "values"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (9.6ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Load (0.5ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (4.8ms)[0m  [1m[31mROLLBACK TO SAVEPOINT active_record_1[0m
+  Rendering layout layouts/application.html.haml
+  Rendering values/edit.html.haml within layouts/application
+  Rendered values/_form.html.haml (Duration: 1.2ms | Allocations: 1266)
+  Rendered values/edit.html.haml within layouts/application (Duration: 1.5ms | Allocations: 1370)
+  Rendered shared/_header.html.haml (Duration: 0.2ms | Allocations: 117)
+  Rendered shared/_footer.html.haml (Duration: 0.1ms | Allocations: 61)
+  Rendered layout layouts/application.html.haml (Duration: 4.2ms | Allocations: 2751)
+Completed 422 Unprocessable Entity in 63ms (Views: 13.5ms | ActiveRecord: 32.1ms | Allocations: 7504)
+  [1m[36mTRANSACTION (21.9ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+----------------------------------------------
+ValuesControllerTest: test_should_create_value
+----------------------------------------------
+  [1m[36mValue Load (0.2ms)[0m  [1m[34mSELECT "values".* FROM "values" WHERE "values"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+  [1m[36mValue Count (10.3ms)[0m  [1m[34mSELECT COUNT(*) FROM "values"[0m
+Started POST "/values" for 127.0.0.1 at 2023-05-22 13:01:21 +0300
+Processing by ValuesController#create as HTML
+  Parameters: {"value"=>{"image_id"=>"1", "user_id"=>"1", "value"=>"1"}}
+  [1m[36mTRANSACTION (10.2ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Load (4.6ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (5.6ms)[0m  [1m[31mROLLBACK TO SAVEPOINT active_record_1[0m
+  Rendering layout layouts/application.html.haml
+  Rendering values/new.html.haml within layouts/application
+  Rendered values/_form.html.haml (Duration: 13.1ms | Allocations: 1138)
+  Rendered values/new.html.haml within layouts/application (Duration: 13.3ms | Allocations: 1205)
+  Rendered shared/_header.html.haml (Duration: 0.1ms | Allocations: 117)
+  Rendered shared/_footer.html.haml (Duration: 0.1ms | Allocations: 61)
+  Rendered layout layouts/application.html.haml (Duration: 14.3ms | Allocations: 2586)
+Completed 422 Unprocessable Entity in 40ms (Views: 14.6ms | ActiveRecord: 20.5ms | Allocations: 4112)
+  [1m[36mValue Count (4.3ms)[0m  [1m[34mSELECT COUNT(*) FROM "values"[0m
+  [1m[36mTRANSACTION (3.0ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (5.0ms)[0m  [1m[35mBEGIN[0m
+--------------------------------------------
+ValuesControllerTest: test_should_show_value
+--------------------------------------------
+  [1m[36mValue Load (7.7ms)[0m  [1m[34mSELECT "values".* FROM "values" WHERE "values"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+Started GET "/values/980190962" for 127.0.0.1 at 2023-05-22 13:01:21 +0300
+Processing by ValuesController#show as HTML
+  Parameters: {"id"=>"980190962"}
+  [1m[36mValue Load (8.0ms)[0m  [1m[34mSELECT "values".* FROM "values" WHERE "values"."id" = $1 LIMIT $2[0m  [["id", 980190962], ["LIMIT", 1]]
+  Rendering layout layouts/application.html.haml
+  Rendering values/show.html.haml within layouts/application
+  Rendered values/show.html.haml within layouts/application (Duration: 63.4ms | Allocations: 5236)
+  Rendered shared/_header.html.haml (Duration: 0.1ms | Allocations: 118)
+  Rendered shared/_footer.html.haml (Duration: 0.1ms | Allocations: 61)
+  Rendered layout layouts/application.html.haml (Duration: 80.4ms | Allocations: 6618)
+Completed 200 OK in 92ms (Views: 82.8ms | ActiveRecord: 8.0ms | Allocations: 7108)
+  [1m[36mTRANSACTION (15.9ms)[0m  [1m[31mROLLBACK[0m

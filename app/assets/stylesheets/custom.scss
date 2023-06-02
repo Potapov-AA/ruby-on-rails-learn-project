@@ -1,0 +1,136 @@
+
+
+a {
+	text-decoration: none;
+}
+
+.header {
+	background-color: #228B22;
+	padding-bottom: 20px;
+}
+
+.title {
+	text-align: center;
+	font-size: 30px;
+	margin-bottom: 20px;
+	margin-top: 30px;
+	text-transform: uppercase;
+}
+
+.header_signin {
+	text-align: center;
+	font-size: 20px;
+	border: solid 2px;
+	border-radius: 10px;
+	border-color: white;
+	background-color: white;
+	text-transform: uppercase;
+	color: black;
+}
+
+.header_signout {
+	text-align: center;
+	font-size: 20px;
+	border: solid 2px;
+	border-radius: 10px;
+	border-color: red;
+	background-color: red;
+	text-transform: uppercase;
+	color: white;
+}
+
+.header_link {
+	text-align: center;
+	font-size: 20px;
+	text-transform: uppercase;
+	text-decoration: none;
+	color: #fff;
+	padding-top: 5px;
+}
+
+.not_active_link {
+	text-align: center;
+	font-size: 20px;
+	text-transform: uppercase;
+	color: gray;
+}
+
+.content {
+    min-height:750px;
+    padding: 30px;
+    background-color: #FFFAF0;
+}
+
+.footer {
+	background-color: #006400;
+}
+
+.footer_title {
+	color: white;
+	font-size: 20px;
+	text-transform: uppercase;
+	text-align: center;
+	margin-bottom: 20px;
+}
+
+.footer_copyright {
+	color: white;
+	font-size: 12px;
+	text-transform: uppercase;
+	text-align: center;
+	margin-top: 14px;
+}
+
+.footer_about {
+	color: #FFE4E1;
+	text-align: center;
+	font-size: 18px;
+}
+
+.footer_contacts {
+	color: #FFE4E1;
+	text-align: center;
+	font-size: 18px;
+}
+
+.new_user_title {
+	margin-bottom: 15px;
+}
+
+.new_user_back {
+	margin-top: 15px;
+	color: black;
+	font-size: 20px;
+}
+
+.form_label {
+	font-size: 16px;
+	text-align: left;
+	padding-top: 2px;
+}
+
+.form_button {
+	text-align: center;
+}
+
+.sign_up_link {
+	padding-top: 15px;
+	font-size: 14px;
+	color: black;
+}
+
+.work_title {
+	text-align: center;
+	font-size: 28px;
+	color: black;
+}
+
+.work_image_title {
+	text-align: left;
+	font-size: 20px;
+	color: darkblue;
+}
+
+.center {
+	text-align: center;
+}

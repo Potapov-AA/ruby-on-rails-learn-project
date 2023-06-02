@@ -1,0 +1,25 @@
+.container.header
+	%h1.title= t(:header_logo_title)
+	.row
+		.col-sm-2
+			.header_link= link_to t(:header_home), main_index_path, class: "header_link"
+		.col-sm-2
+			- if signed_in?
+				.header_link= link_to t(:header_grade), work_path, class: "header_link"
+			- else
+				%p.not_active_link= t(:header_grade)
+		.col-sm-4
+		.col-sm-2
+			%p.locale.header_link 
+				-#.ru_link
+				= link_to image_tag("Russian.png", alt: "", style: "width: 20px; height: 20px", title: "Русский" ), locale: :ru
+				= link_to image_tag("UK.jpeg", alt: "", style: "width: 20px; height: 20px", title: "English"), locale: :en
+				%b
+				= I18n.locale		
+		.col-sm-2
+			- if signed_in?
+				.header_signout= link_to t(:header_logout), signout_path, method: "delete",  class: "header_signout"
+			- else 
+				.header_signin= link_to t(:header_login), signin_path,  class: "header_signin"
+
+	

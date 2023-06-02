@@ -1,0 +1,42 @@
+en:
+  header_logo_title: "Unexpected food evaluation site and PAPER GUN!!!"
+  header_home: "Home"
+  header_grade: "Grade"
+  header_logout: "Log out"
+  header_login: "Login"
+
+  footer_title: "The footer of an unexpected food evaluation site and paper weapons"
+  footer_contact: "Contacts"
+  footer_number: "Number: 8(999)999-99-99"
+  footer_mail: "Mail: pochta@mail.ru"
+  footer_address: "Address: sity Neojidanniy, street Neojidanosti"
+
+  main_welcome: "Welcome!"
+  main_grade: "Go to grade!"
+  main_signup: "Sign up now!"
+
+  new_user_title: "New user"
+  new_user_back: "Back"
+
+  name: "Name"
+  email: "Email"
+  password: "Password"
+  password_confirmation: "Password confirmation"
+  create_account: "Create account"
+
+  new_user_login: "New user?"
+  new_user_signup: "Sign up"
+
+  def_select_theme: "Choose a topic to get started"
+  default_image: "Default image"
+  make_decision: "Make Decision"
+  save_decision: "Save decision"
+  results_list: "Results list"
+  select_theme_bt: "Select Theme"
+  results_list_title: "All images expert values"
+  results_list_image_name: "Image name"
+  results_list_image: "Image"
+  results_list_value: "Value"
+  results_list_date: "Date"
+  return_to_grade: "Return to grade"
+  

@@ -1,0 +1,41 @@
+ru:
+  header_logo_title: "Неожиданный сайт оценки еды и БУМАЖНОГО ОРУЖИЯ!!!"
+  header_home: "Главная"
+  header_grade: "Оценка"
+  header_logout: "Выход"
+  header_login: " Войти"
+
+  footer_title: "Футер неожиданного сайта оценки еды и бумажного оружия"
+  footer_contact: "Контакты"
+  footer_number: "Телефон: 8(999)999-99-99"
+  footer_mail: "Почта: pochta@mail.ru"
+  footer_address: "Адрес: г. Неожиданный, ул. Неожиданости"
+
+  main_welcome: "Добро пожаловать!"
+  main_grade: "Перейти к оцениванию!"
+  main_signup: "Зарегестрироваться сейчас!"
+  
+  new_user_title: "Новый пользователь"
+  new_user_back: "Назад"
+
+  name: "Имя"
+  email: "Почта"
+  password: "Пароль"
+  password_confirmation: "Подтверждение пароля"
+  create_account: "Создать аккаунт"
+
+  new_user_login: "Новый пользователь?"
+  new_user_signup: "Зарегестрироваться"
+
+  def_select_theme: "Чтобы начать выбирите тему"
+  default_image: "Дефолтное изображение"
+  make_decision: "Поставьте оценку"
+  save_decision: "Сохранить оценку"
+  results_list: "Список результатов"
+  select_theme_bt: "Выбирите тему"
+  results_list_title: "Все экспертные оценки изображений"
+  results_list_image_name: "Название изображения"
+  results_list_image: "Изображение"
+  results_list_value: "Значение"
+  results_list_date: "Дата"
+  return_to_grade: "Вернуться к оцениванию"
